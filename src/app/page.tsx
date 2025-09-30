@@ -157,11 +157,6 @@ export default function Home() {
         <p className="mt-2 text-muted-foreground">
           AI-Powered Brand Identity Mockups Generator
         </p>
-        {userId && (
-          <p className="mt-1 text-xs text-muted-foreground/80">
-            User ID: {userId.substring(0, 8)}...
-          </p>
-        )}
       </header>
 
       <main className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
