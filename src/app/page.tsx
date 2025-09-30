@@ -4,8 +4,8 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { z } from 'zod';
-import { initializeApp } from 'firebase/app';
-import { getAuth, signInAnonymously, signInWithCustomToken } from 'firebase/auth';
+import { signInAnonymously } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
 
 import { generateIdentityAction } from '@/app/actions';
 import { brandFormSchema } from '@/lib/schema';
@@ -20,10 +20,6 @@ import { Download, Upload, Zap, Sparkles, AlertCircle, Loader2 } from 'lucide-re
 
 const STYLE_OPTIONS = ['Modern', 'Minimalist', 'Vintage', 'Urban', 'Futuristic', 'Eco-Natural', 'Sporty', 'Luxury', 'Geometric'];
 const DEFAULT_MERCH = 'coffee mug, paper bag, billboard, cap';
-
-// These variables are expected to be injected by the environment.
-declare const __firebase_config: string | undefined;
-declare const __initial_auth_token: string | undefined;
 
 export default function Home() {
   const [userId, setUserId] = useState<string | null>(null);
@@ -48,31 +44,16 @@ export default function Home() {
   const logoFile = form.watch('logoFile');
 
   useEffect(() => {
-    if (typeof window === 'undefined' || !__firebase_config) return;
-
-    try {
-      const firebaseConfig = JSON.parse(__firebase_config);
-      const app = initializeApp(firebaseConfig);
-      const authInstance = getAuth(app);
-      
-      const signIn = async () => {
-        try {
-          if (__initial_auth_token) {
-            await signInWithCustomToken(authInstance, __initial_auth_token);
-          } else {
-            await signInAnonymously(authInstance);
-          }
-          setUserId(authInstance.currentUser?.uid || crypto.randomUUID());
-        } catch (authError) {
-          console.error("Firebase authentication failed:", authError);
-          setUserId(crypto.randomUUID()); // Fallback for local dev
-        }
-      };
-      signIn();
-    } catch (e) {
-      console.error("Firebase initialization failed:", e);
-      setUserId(crypto.randomUUID()); // Fallback for local dev
-    }
+    const signIn = async () => {
+      try {
+        const userCredential = await signInAnonymously(auth);
+        setUserId(userCredential.user.uid);
+      } catch (authError) {
+        console.error("Firebase authentication failed:", authError);
+        setUserId(crypto.randomUUID()); // Fallback for local dev
+      }
+    };
+    signIn();
   }, []);
 
   const onSubmit = async (values: z.infer<typeof brandFormSchema>) => {
