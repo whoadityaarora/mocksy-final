@@ -35,16 +35,23 @@ const generateBrandIdentityFromPromptFlow = ai.defineFlow(
     outputSchema: GenerateBrandIdentityFromPromptOutputSchema,
   },
   async (input) => {
-
     const itemCount = input.merchandise.split(',').filter(item => item.trim() !== '').length;
+    
     let gridInstruction = '';
-    if (itemCount <= 3) {
-      gridInstruction = `a single row grid`;
-    } else if (itemCount === 4) {
-      gridInstruction = `a 2x2 grid`;
+    if (itemCount > 1) {
+      gridInstruction = 'The final image must be structured as a photo collage with clear grid lines separating each item.';
+      if (itemCount <= 3) {
+        gridInstruction += ' Arrange the items in a single row.';
+      } else if (itemCount === 4) {
+        gridInstruction += ' Arrange the items in a 2x2 grid.';
+      } else { // 5 or 6 items
+        gridInstruction += ' Arrange the items in a 2x3 grid.';
+      }
+      gridInstruction += " Do not repeat items to fill empty grid cells. The arrangement must emphasize visual hierarchy.";
     } else {
-      gridInstruction = `a 2x3 grid`;
+      gridInstruction = 'The final image should feature the single merchandise item prominently in a professional studio setting.';
     }
+
 
     const promptText = `You are an AI-powered brand identity generator. Your task is to create a single, high-quality, professional studio mockup image that visually represents a brand identity based on the user's logo and brand details.
 
@@ -60,7 +67,8 @@ Instructions:
 - The products displayed should be: ${input.merchandise}.
 - The main visual color and color palette should be dominated by: ${input.mainColor}.
 - The overall design and presentation must be in a ${input.style} style. Ensure the logo is perfectly rendered on all items with excellent lighting and resolution.
-- The final image must be structured using ${gridInstruction} with clear grid lines separating each item, similar to a photo collage. Do not repeat items to fill empty grid cells. The arrangement must emphasize **visual hierarchy** so that the most important items draw the viewer's eye first. Maintain a clean, studio-quality aesthetic.
+- ${gridInstruction}
+- Maintain a clean, studio-quality aesthetic throughout.
 
 Output:
 Return a data URI containing the generated PNG image. It is very important that this be a valid data URI.
