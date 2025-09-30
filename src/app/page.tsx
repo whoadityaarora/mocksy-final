@@ -19,6 +19,8 @@ import { AlertDialog, AlertDialogAction, AlertDialogContent, AlertDialogDescript
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
 import { Download, Upload, Zap, Sparkles, AlertCircle, Loader2, Wand2 } from 'lucide-react';
+import Image from 'next/image';
+
 
 const STYLE_OPTIONS = ['Modern', 'Minimalist', 'Vintage', 'Urban', 'Futuristic', 'Eco-Natural', 'Sporty', 'Luxury', 'Geometric'];
 
@@ -30,6 +32,7 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [improvements, setImprovements] = useState<string | null>(null);
   const [statusMessage, setStatusMessage] = useState('Upload your logo and define your brand identity inputs.');
+  const [logoPreviewUrl, setLogoPreviewUrl] = useState<string | null>(null);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -45,6 +48,18 @@ export default function Home() {
   });
 
   const logoFile = form.watch('logoFile');
+
+  useEffect(() => {
+    if (logoFile) {
+      const url = URL.createObjectURL(logoFile);
+      setLogoPreviewUrl(url);
+
+      return () => {
+        URL.revokeObjectURL(url);
+        setLogoPreviewUrl(null);
+      };
+    }
+  }, [logoFile]);
 
   useEffect(() => {
     const signIn = async () => {
@@ -99,7 +114,7 @@ export default function Home() {
     try {
       const values = form.getValues();
       const result = await suggestImprovementsAction({
-        brandName: values.brandName,
+        brandName: values.brandName ?? 'brand',
         mainColor: values.mainColor,
         style: values.style,
         merchandise: values.merchandise,
@@ -123,15 +138,14 @@ export default function Home() {
     if (generatedImageUrl) {
       const link = document.createElement('a');
       link.href = generatedImageUrl;
-      link.download = `${form.getValues('brandName').toLowerCase().replace(/\s/g, '_')}_mockups_${Date.now()}.png`;
+      link.download = `${(form.getValues('brandName') || 'brand').toLowerCase().replace(/\s/g, '_')}_mockups_${Date.now()}.png`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
     }
   }, [generatedImageUrl, form]);
   
-  const logoFileName = logoFile ? logoFile.name : null;
-  const isGenerateDisabled = isLoading || !logoFileName;
+  const isGenerateDisabled = isLoading || !logoFile;
 
   return (
     <div className="min-h-screen bg-background p-4 sm:p-8 font-body text-foreground">
@@ -173,24 +187,30 @@ export default function Home() {
               <FormField
                 control={form.control}
                 name="logoFile"
-                render={({ field: { onChange, ...rest } }) => (
+                render={({ field: { onChange } }) => (
                   <FormItem>
-                    <FormLabel>Upload Logo Image (Required)</FormLabel>
+                    <FormLabel>Upload Logo Image *</FormLabel>
                     <FormControl>
                       <div 
                         className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed rounded-xl cursor-pointer hover:border-primary/80 transition"
                         onClick={() => fileInputRef.current?.click()}
                       >
                          <div className="space-y-1 text-center">
-                            <Upload className="mx-auto h-12 w-12 text-muted-foreground/50" />
-                            <div className="flex text-sm text-muted-foreground">
-                              {logoFileName ? (
-                                <span className="font-medium text-primary">{logoFileName}</span>
-                              ) : (
-                                <span className="font-medium text-primary hover:text-primary/80">
-                                  Click to upload logo
-                                </span>
-                              )}
+                            {logoPreviewUrl ? (
+                              <div className='relative w-40 h-40 mx-auto'>
+                                <Image src={logoPreviewUrl} alt="Logo Preview" layout="fill" objectFit="contain" />
+                              </div>
+                            ) : (
+                              <>
+                                <Upload className="mx-auto h-12 w-12 text-muted-foreground/50" />
+                                <div className="flex text-sm text-muted-foreground">
+                                    <span className="font-medium text-primary hover:text-primary/80">
+                                      Click to upload logo
+                                    </span>
+                                </div>
+                                <p className="text-xs text-muted-foreground/70">PNG/JPG up to 5MB</p>
+                              </>
+                            )}
                             <input 
                               ref={fileInputRef} 
                               type="file" 
@@ -198,8 +218,6 @@ export default function Home() {
                               accept="image/png, image/jpeg, image/jpg"
                               onChange={(e) => onChange(e.target.files?.[0])}
                             />
-                            </div>
-                            <p className="text-xs text-muted-foreground/70">PNG/JPG up to 5MB</p>
                          </div>
                       </div>
                     </FormControl>
@@ -213,7 +231,7 @@ export default function Home() {
                 name="merchandise"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Merchandise Items (Comma Separated)</FormLabel>
+                    <FormLabel>Merchandise Items (Comma Separated) *</FormLabel>
                     <FormControl>
                       <Input placeholder="e.g., packaging bag, hat, lanyard" {...field} />
                     </FormControl>
@@ -228,7 +246,7 @@ export default function Home() {
                 name="mainColor"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Main Color Theme</FormLabel>
+                    <FormLabel>Main Color Theme *</FormLabel>
                     <FormControl>
                       <Input placeholder="e.g., Violet, Emerald Green, Neon Pink" {...field} />
                     </FormControl>
@@ -242,7 +260,7 @@ export default function Home() {
                 name="style"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Design Style</FormLabel>
+                    <FormLabel>Design Style *</FormLabel>
                      <Select onValueChange={field.onChange} value={field.value}>
                         <FormControl>
                           <SelectTrigger>

@@ -28,7 +28,7 @@ export async function generateIdentityAction(
     const logoDataUri = await fileToDataUri(logoFile);
 
     const result = await generateBrandIdentityFromPrompt({ 
-      brandName,
+      brandName: brandName ?? 'brand',
       merchandise,
       mainColor,
       style,
