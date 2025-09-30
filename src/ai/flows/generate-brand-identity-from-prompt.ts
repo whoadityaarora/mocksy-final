@@ -27,7 +27,6 @@ export async function generateBrandIdentityFromPrompt(input: GenerateBrandIdenti
 const generateBrandIdentityPrompt = ai.definePrompt({
   name: 'generateBrandIdentityPrompt',
   input: {schema: GenerateBrandIdentityFromPromptInputSchema},
-  output: {schema: GenerateBrandIdentityFromPromptOutputSchema},
   prompt: `You are an AI-powered brand identity generator. Your task is to create a single, high-quality, professional studio mockup image that visually represents a brand identity based on the user's text prompt.
 
 User Prompt: {{{prompt}}}
@@ -50,9 +49,10 @@ const generateBrandIdentityFromPromptFlow = ai.defineFlow(
     outputSchema: GenerateBrandIdentityFromPromptOutputSchema,
   },
   async input => {
+    const prompt = await generateBrandIdentityPrompt(input);
     const {media} = await ai.generate({
       model: 'googleai/imagen-4.0-fast-generate-001',
-      prompt: generateBrandIdentityPrompt.prompt(input).prompt,
+      prompt: prompt.prompt,
     });
     return {imageUrl: media.url!};
   }
