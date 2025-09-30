@@ -7,7 +7,7 @@ import type { z } from 'zod';
 import { signInAnonymously, type AuthError } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 
-import { generateIdentityAction, suggestImprovementsAction } from '@/app/actions';
+import { generateIdentityAction, suggestImprovementsAction, getUserUsage } from '@/app/actions';
 import { brandFormSchema } from '@/lib/schema';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -23,9 +23,11 @@ import Image from 'next/image';
 
 
 const STYLE_OPTIONS = ['Modern', 'Minimalist', 'Vintage', 'Urban', 'Futuristic', 'Eco-Natural', 'Sporty', 'Luxury', 'Geometric'];
+const MAX_GENERATIONS = 5;
 
 export default function Home() {
   const [userId, setUserId] = useState<string | null>(null);
+  const [usageCount, setUsageCount] = useState(0);
   const [generatedImageUrl, setGeneratedImageUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isImproving, setIsImproving] = useState(false);
@@ -48,6 +50,15 @@ export default function Home() {
   });
 
   const logoFile = form.watch('logoFile');
+  
+  const fetchUsage = useCallback(async (id: string) => {
+    const count = await getUserUsage(id);
+    setUsageCount(count);
+    if (count >= MAX_GENERATIONS) {
+      setStatusMessage(`You've reached your limit of ${MAX_GENERATIONS} mockups.`);
+    }
+  }, []);
+
 
   useEffect(() => {
     if (logoFile) {
@@ -65,7 +76,9 @@ export default function Home() {
     const signIn = async () => {
       try {
         const userCredential = await signInAnonymously(auth);
-        setUserId(userCredential.user.uid);
+        const uid = userCredential.user.uid;
+        setUserId(uid);
+        fetchUsage(uid);
       } catch (authError) {
         const firebaseError = authError as AuthError;
         if (firebaseError.code === 'auth/operation-not-allowed' || firebaseError.code === 'auth/configuration-not-found') {
@@ -75,11 +88,13 @@ export default function Home() {
         } else {
           console.error('Firebase authentication failed:', firebaseError);
         }
-        setUserId(crypto.randomUUID()); // Fallback for local dev or if auth is not enabled
+        const fallbackId = crypto.randomUUID();
+        setUserId(fallbackId);
+        fetchUsage(fallbackId);
       }
     };
     signIn();
-  }, []);
+  }, [fetchUsage]);
 
   const onSubmit = async (values: z.infer<typeof brandFormSchema>) => {
     setIsLoading(true);
@@ -88,7 +103,7 @@ export default function Home() {
     setStatusMessage('Generating cohesive brand identity mockups...');
 
     try {
-      const result = await generateIdentityAction(values);
+      const result = await generateIdentityAction(values, userId);
 
       if (result.error) {
         throw new Error(result.error);
@@ -96,6 +111,8 @@ export default function Home() {
       
       setGeneratedImageUrl(result.imageUrl as string);
       setStatusMessage('Brand identity successfully generated! Review and download your high-resolution mockups.');
+      
+      if(userId) fetchUsage(userId);
 
     } catch (e: any) {
       const errorMessage = e.message || "An unexpected error occurred.";
@@ -145,7 +162,8 @@ export default function Home() {
     }
   }, [generatedImageUrl, form]);
   
-  const isGenerateDisabled = isLoading || !logoFile;
+  const isLimitReached = usageCount >= MAX_GENERATIONS;
+  const isGenerateDisabled = isLoading || !logoFile || isLimitReached;
 
   return (
     <div className="min-h-screen bg-background p-4 sm:p-8 font-body text-foreground">
@@ -273,14 +291,21 @@ export default function Home() {
                 )}
               />
 
-              <Button type="submit" disabled={isGenerateDisabled} className="w-full !mt-8 text-lg py-6 transition-transform transform hover:scale-[1.02] active:scale-[0.98]">
-                {isLoading ? (
-                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                ) : (
-                  <Sparkles className="mr-2 h-5 w-5" />
-                )}
-                <span>{isLoading ? 'Generating...' : 'Generate Mockups'}</span>
-              </Button>
+              <div className='!mt-8 space-y-2'>
+                <Button type="submit" disabled={isGenerateDisabled} className="w-full text-lg py-6 transition-transform transform hover:scale-[1.02] active:scale-[0.98]">
+                  {isLoading ? (
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                  ) : (
+                    <Sparkles className="mr-2 h-5 w-5" />
+                  )}
+                  <span>{isLoading ? 'Generating...' : 'Generate Mockups'}</span>
+                </Button>
+                <p className="text-center text-xs text-muted-foreground">
+                  {isLimitReached
+                    ? "You've reached your generation limit."
+                    : `You have ${MAX_GENERATIONS - usageCount} generations remaining.`}
+                </p>
+              </div>
             </form>
           </Form>
         </Card>
@@ -300,7 +325,7 @@ export default function Home() {
                     </Alert>
                 )}
                 {!error && statusMessage && (
-                    <div className={`px-4 py-3 rounded-lg text-sm ${isLoading ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300' : 'bg-primary/10 text-primary/80 dark:text-primary'}`}>
+                    <div className={`px-4 py-3 rounded-lg text-sm ${isLoading ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300' : isLimitReached ? 'bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300' : 'bg-primary/10 text-primary/80 dark:text-primary'}`}>
                         <p>{statusMessage}</p>
                     </div>
                 )}
