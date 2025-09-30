@@ -8,6 +8,7 @@
  */
 
 import {ai} from '@/ai/genkit';
+import {renderPrompt} from 'genkit';
 import {z} from 'genkit';
 
 const GenerateBrandIdentityFromPromptInputSchema = z.object({
@@ -60,16 +61,31 @@ const generateBrandIdentityFromPromptFlow = ai.defineFlow(
     outputSchema: GenerateBrandIdentityFromPromptOutputSchema,
   },
   async input => {
+    const renderedPrompt = await renderPrompt({
+      prompt: generateBrandIdentityPrompt,
+      input: input,
+    });
+    
+    const textPart = renderedPrompt.prompt.find(p => p.text);
+    if (!textPart?.text) {
+      throw new Error('Could not render prompt text.');
+    }
+    
     const {media} = await ai.generate({
       model: 'googleai/gemini-2.5-flash-image-preview',
       prompt: [
-        {text: (await generateBrandIdentityPrompt(input)).prompt[0].text},
+        {text: textPart.text},
         {media: {url: input.logoDataUri}},
       ],
       config: {
         responseModalities: ['IMAGE'],
       },
     });
-    return {imageUrl: media.url!};
+
+    if (!media?.url) {
+      throw new Error('The AI model did not return an image. Please try again.');
+    }
+
+    return {imageUrl: media.url};
   }
 );

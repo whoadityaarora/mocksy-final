@@ -19,11 +19,11 @@ export async function generateIdentityAction(
   try {
     const { brandName, merchandise, mainColor, style, logoFile } = values;
 
-    if (!logoFile || logoFile.length === 0) {
+    if (!logoFile || logoFile.size === 0) {
       return { error: 'Logo file is required.' };
     }
 
-    const logoDataUri = await fileToDataUri(logoFile[0]);
+    const logoDataUri = await fileToDataUri(logoFile);
 
     const result = await generateBrandIdentityFromPrompt({ 
       brandName,
