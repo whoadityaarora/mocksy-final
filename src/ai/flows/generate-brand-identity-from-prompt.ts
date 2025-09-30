@@ -60,7 +60,7 @@ Instructions:
 - The products displayed should be: ${input.merchandise}.
 - The main visual color and color palette should be dominated by: ${input.mainColor}.
 - The overall design and presentation must be in a ${input.style} style. Ensure the logo is perfectly rendered on all items with excellent lighting and resolution.
-- The final image must be structured using ${gridInstruction} for high visual impact and clarity. Do not repeat items to fill empty grid cells. Apply **universal spacing** (negative space) around each item to prevent clutter. The arrangement must emphasize **visual hierarchy** so that the most important items draw the viewer's eye first. Maintain a clean, studio-quality aesthetic.
+- The final image must be structured using ${gridInstruction} with clear grid lines separating each item, similar to a photo collage. Do not repeat items to fill empty grid cells. The arrangement must emphasize **visual hierarchy** so that the most important items draw the viewer's eye first. Maintain a clean, studio-quality aesthetic.
 
 Output:
 Return a data URI containing the generated PNG image. It is very important that this be a valid data URI.
