@@ -1,17 +1,21 @@
 'use server';
 /**
- * @fileOverview Generates a brand identity mockup image from a text prompt.
+ * @fileOverview Generates a brand identity mockup image from a text prompt and a logo image.
  *
- * - generateBrandIdentityFromPrompt - A function that generates a brand identity mockup image from a text prompt.
- * - GenerateBrandIdentityFromPromptInput - The input type for the generateBrandIdentityFromPrompt function.
- * - GenerateBrandIdentityFromPromptOutput - The return type for the generateBrandIdentityFromPrompt function.
+ * - generateBrandIdentityFromPrompt - A function that generates a brand identity mockup image.
+ * - GenerateBrandIdentityFromPromptInput - The input type for the function.
+ * - GenerateBrandIdentityFromPromptOutput - The return type for the function.
  */
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const GenerateBrandIdentityFromPromptInputSchema = z.object({
-  prompt: z.string().describe('A detailed text prompt describing the desired brand identity, including the brand name, color scheme, style, and merchandise items to include in the mockup.'),
+  brandName: z.string().describe('The name of the brand.'),
+  merchandise: z.string().describe('A comma-separated list of merchandise items.'),
+  mainColor: z.string().describe('The main color theme for the brand.'),
+  style: z.string().describe('The design style for the brand (e.g., Modern, Minimalist).'),
+  logoDataUri: z.string().describe("A data URI of the brand's logo. Expected format: 'data:<mimetype>;base64,<encoded_data>'."),
 });
 export type GenerateBrandIdentityFromPromptInput = z.infer<typeof GenerateBrandIdentityFromPromptInputSchema>;
 
@@ -27,18 +31,25 @@ export async function generateBrandIdentityFromPrompt(input: GenerateBrandIdenti
 const generateBrandIdentityPrompt = ai.definePrompt({
   name: 'generateBrandIdentityPrompt',
   input: {schema: GenerateBrandIdentityFromPromptInputSchema},
-  prompt: `You are an AI-powered brand identity generator. Your task is to create a single, high-quality, professional studio mockup image that visually represents a brand identity based on the user's text prompt.
+  prompt: `You are an AI-powered brand identity generator. Your task is to create a single, high-quality, professional studio mockup image that visually represents a brand identity based on the user's logo and brand details.
 
-User Prompt: {{{prompt}}}
+Brand Details:
+- Brand Name: {{{brandName}}}
+- Merchandise Items: {{{merchandise}}}
+- Main Color Theme: {{{mainColor}}}
+- Design Style: {{{style}}}
+- Logo: {{media url=logoDataUri}}
 
 Instructions:
-- Create a cohesive set of visual designs for the brand, ensuring that all elements align with the provided text prompt.
-- Products to be displayed should be relevant to the brand identity described in the prompt.  Incorporate at least 3 different products into the mockup.
-- The overall design and presentation must reflect the style specified in the prompt. Ensure the logo is rendered clearly on all items with excellent lighting and resolution.
+- Create a cohesive set of visual designs for the brand, ensuring that all elements align with the provided brand details.
+- The provided logo must be prominently and clearly displayed on all merchandise items.
+- The products displayed should be: {{{merchandise}}}.
+- The main visual color and color palette should be dominated by: {{{mainColor}}}.
+- The overall design and presentation must be in a {{{style}}} style. Ensure the logo is perfectly rendered on all items with excellent lighting and resolution.
 - The final image must be structured using a **2x3 grid layout** for high visual impact and clarity. Apply **universal spacing** (negative space) around each item to prevent clutter. The arrangement must emphasize **visual hierarchy** so that the most important items draw the viewer's eye first. Maintain a clean, studio-quality aesthetic.
 
 Output:
-Return a data URI containing the generated PNG image.  It is very important that this be a valid data URI.
+Return a data URI containing the generated PNG image. It is very important that this be a valid data URI.
 `,
 });
 
@@ -49,10 +60,15 @@ const generateBrandIdentityFromPromptFlow = ai.defineFlow(
     outputSchema: GenerateBrandIdentityFromPromptOutputSchema,
   },
   async input => {
-    const prompt = await generateBrandIdentityPrompt(input);
     const {media} = await ai.generate({
-      model: 'googleai/imagen-4.0-fast-generate-001',
-      prompt: prompt.prompt,
+      model: 'googleai/gemini-2.5-flash-image-preview',
+      prompt: [
+        {text: (await generateBrandIdentityPrompt(input)).prompt},
+        {media: {url: input.logoDataUri}},
+      ],
+      config: {
+        responseModalities: ['IMAGE'],
+      },
     });
     return {imageUrl: media.url!};
   }

@@ -6,23 +6,32 @@ import type { brandFormSchema } from "@/lib/schema";
 
 type BrandFormInput = z.infer<typeof brandFormSchema>;
 
+// Helper function to convert a file to a data URI
+async function fileToDataUri(file: File): Promise<string> {
+  const arrayBuffer = await file.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
+  return `data:${file.type};base64,${buffer.toString("base64")}`;
+}
+
 export async function generateIdentityAction(
   values: BrandFormInput
 ): Promise<{ imageUrl?: string; error?: string }> {
   try {
-    const { brandName, merchandise, mainColor, style } = values;
+    const { brandName, merchandise, mainColor, style, logoFile } = values;
 
-    // The AI flow is text-only. The prompt will describe the brand, and the AI
-    // will generate a logo and mockups based on this text description.
-    const prompt = `Create a single, high-quality, professional studio mockup image for a brand named '${brandName}'.
-The brand has a distinct logo that should be prominently and clearly displayed.
-Products to be displayed should include: ${merchandise}.
-The main visual color and color palette should be dominated by: ${mainColor}.
-The overall design and presentation must be in a ${style} style. Ensure the logo is perfectly rendered on all items with excellent lighting and resolution.
+    if (!logoFile || logoFile.length === 0) {
+      return { error: 'Logo file is required.' };
+    }
 
-The final image must be structured using a **2x3 grid layout** for high visual impact and clarity. Apply **universal spacing** (negative space) around each item to prevent clutter. The arrangement must emphasize **visual hierarchy** so that the most important items draw the viewer's eye first. Maintain a clean, studio-quality aesthetic.`;
+    const logoDataUri = await fileToDataUri(logoFile[0]);
 
-    const result = await generateBrandIdentityFromPrompt({ prompt });
+    const result = await generateBrandIdentityFromPrompt({ 
+      brandName,
+      merchandise,
+      mainColor,
+      style,
+      logoDataUri,
+    });
 
     if (!result.imageUrl) {
       throw new Error("The AI model did not return an image. Please try again.");
