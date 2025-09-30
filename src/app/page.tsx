@@ -21,7 +21,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Download, Upload, Zap, Sparkles, AlertCircle, Loader2, Wand2 } from 'lucide-react';
 
 const STYLE_OPTIONS = ['Modern', 'Minimalist', 'Vintage', 'Urban', 'Futuristic', 'Eco-Natural', 'Sporty', 'Luxury', 'Geometric'];
-const DEFAULT_MERCH = 'coffee mug, paper bag, billboard, cap';
 
 export default function Home() {
   const [userId, setUserId] = useState<string | null>(null);
@@ -37,10 +36,10 @@ export default function Home() {
   const form = useForm<z.infer<typeof brandFormSchema>>({
     resolver: zodResolver(brandFormSchema),
     defaultValues: {
-      brandName: 'My Brand',
-      mainColor: 'Navy Blue',
-      style: STYLE_OPTIONS[0],
-      merchandise: DEFAULT_MERCH,
+      brandName: '',
+      mainColor: '',
+      style: undefined,
+      merchandise: '',
       logoFile: undefined,
     },
   });
@@ -244,7 +243,7 @@ export default function Home() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Design Style</FormLabel>
-                     <Select onValueChange={field.onChange} defaultValue={field.value}>
+                     <Select onValueChange={field.onChange} value={field.value}>
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select a design style" />
