@@ -39,17 +39,17 @@ const generateBrandIdentityFromPromptFlow = ai.defineFlow(
     
     let gridInstruction = '';
     if (itemCount > 1) {
-      gridInstruction = 'The final image must be structured as a photo collage with clear grid lines separating each item.';
+      let arrangement = '';
       if (itemCount <= 3) {
-        gridInstruction += ' Arrange the items in a single row.';
+        arrangement = `in a single row`;
       } else if (itemCount === 4) {
-        gridInstruction += ' Arrange the items in a 2x2 grid.';
+        arrangement = `in a 2x2 grid`;
       } else { // 5 or 6 items
-        gridInstruction += ' Arrange the items in a 2x3 grid.';
+        arrangement = `in a 2x3 grid`;
       }
-      gridInstruction += " Do not repeat items to fill empty grid cells. The arrangement must emphasize visual hierarchy.";
+      gridInstruction = `The final image must be a photo collage, with each item displayed in its own section of a grid, arranged ${arrangement}. Each section should be separated by a single, clean, thin line. Do not repeat items.`;
     } else {
-      gridInstruction = 'The final image should feature the single merchandise item prominently in a professional studio setting.';
+      gridInstruction = 'The final image should feature the single merchandise item prominently in a professional studio setting. Do not use any grid lines.';
     }
 
 
