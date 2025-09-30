@@ -51,13 +51,13 @@ export default function Home() {
 
   const logoFile = form.watch('logoFile');
   
-  const fetchUsage = useCallback(async (id: string) => {
-    const count = await getUserUsage(id);
-    setUsageCount(count);
-    if (count >= MAX_GENERATIONS) {
-      setStatusMessage(`You've reached your limit of ${MAX_GENERATIONS} mockups.`);
-    }
-  }, []);
+  // const fetchUsage = useCallback(async (id: string) => {
+  //   const count = await getUserUsage(id);
+  //   setUsageCount(count);
+  //   if (count >= MAX_GENERATIONS) {
+  //     setStatusMessage(`You've reached your limit of ${MAX_GENERATIONS} mockups.`);
+  //   }
+  // }, []);
 
 
   useEffect(() => {
@@ -78,7 +78,7 @@ export default function Home() {
         const userCredential = await signInAnonymously(auth);
         const uid = userCredential.user.uid;
         setUserId(uid);
-        fetchUsage(uid);
+        // fetchUsage(uid);
       } catch (authError) {
         const firebaseError = authError as AuthError;
         if (firebaseError.code === 'auth/operation-not-allowed' || firebaseError.code === 'auth/configuration-not-found') {
@@ -90,11 +90,11 @@ export default function Home() {
         }
         const fallbackId = crypto.randomUUID();
         setUserId(fallbackId);
-        fetchUsage(fallbackId);
+        // fetchUsage(fallbackId);
       }
     };
     signIn();
-  }, [fetchUsage]);
+  }, []);
 
   const onSubmit = async (values: z.infer<typeof brandFormSchema>) => {
     setIsLoading(true);
@@ -112,7 +112,7 @@ export default function Home() {
       setGeneratedImageUrl(result.imageUrl as string);
       setStatusMessage('Brand identity successfully generated! Review and download your high-resolution mockups.');
       
-      if(userId) fetchUsage(userId);
+      // if(userId) fetchUsage(userId);
 
     } catch (e: any) {
       const errorMessage = e.message || "An unexpected error occurred.";
@@ -162,8 +162,8 @@ export default function Home() {
     }
   }, [generatedImageUrl, form]);
   
-  const isLimitReached = usageCount >= MAX_GENERATIONS;
-  const isGenerateDisabled = isLoading || !logoFile || isLimitReached;
+  // const isLimitReached = usageCount >= MAX_GENERATIONS;
+  const isGenerateDisabled = isLoading || !logoFile; // || isLimitReached;
 
   return (
     <div className="min-h-screen bg-background p-4 sm:p-8 font-body text-foreground">
@@ -300,11 +300,11 @@ export default function Home() {
                   )}
                   <span>{isLoading ? 'Generating...' : 'Generate Mockups'}</span>
                 </Button>
-                <p className="text-center text-xs text-muted-foreground">
+                {/* <p className="text-center text-xs text-muted-foreground">
                   {isLimitReached
                     ? "You've reached your generation limit."
                     : `You have ${MAX_GENERATIONS - usageCount} generations remaining.`}
-                </p>
+                </p> */}
               </div>
             </form>
           </Form>
@@ -325,7 +325,7 @@ export default function Home() {
                     </Alert>
                 )}
                 {!error && statusMessage && (
-                    <div className={`px-4 py-3 rounded-lg text-sm ${isLoading ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300' : isLimitReached ? 'bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300' : 'bg-primary/10 text-primary/80 dark:text-primary'}`}>
+                    <div className={`px-4 py-3 rounded-lg text-sm ${isLoading ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300' : 'bg-primary/10 text-primary/80 dark:text-primary'}`}>
                         <p>{statusMessage}</p>
                     </div>
                 )}

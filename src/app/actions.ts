@@ -71,10 +71,10 @@ export async function generateIdentityAction(
   }
   
   try {
-    const currentUsage = await getUserUsage(userId);
-    if (currentUsage >= MAX_GENERATIONS) {
-      return { error: "You have reached your generation limit of 5 mockups." };
-    }
+    // const currentUsage = await getUserUsage(userId);
+    // if (currentUsage >= MAX_GENERATIONS) {
+    //   return { error: "You have reached your generation limit of 5 mockups." };
+    // }
 
     const { brandName, merchandise, mainColor, style, logoFile } = values;
 
@@ -97,7 +97,7 @@ export async function generateIdentityAction(
     }
     
     // Increment count after successful generation
-    await incrementUserUsage(userId);
+    // await incrementUserUsage(userId);
 
     return { imageUrl: result.imageUrl };
   } catch (error: any) {
