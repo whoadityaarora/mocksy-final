@@ -152,7 +152,7 @@ export default function Home() {
       <header className="text-center mb-8">
         <h1 className="text-4xl font-extrabold text-foreground flex items-center justify-center space-x-3">
           <Zap className="h-8 w-8 text-primary" />
-          <span>Structured Brand Identity Generator</span>
+          <span>Mocksy</span>
         </h1>
         <p className="mt-2 text-muted-foreground">
           Define your brand elements and let AI generate a single, high-quality, multi-item mockup image.
