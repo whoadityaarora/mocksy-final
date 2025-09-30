@@ -1,6 +1,8 @@
 "use server";
 
 import { generateBrandIdentityFromPrompt } from "@/ai/flows/generate-brand-identity-from-prompt";
+import { suggestBrandImprovements } from "@/ai/flows/suggest-brand-improvements";
+import type { SuggestBrandImprovementsInput } from "@/ai/flows/suggest-brand-improvements";
 import type { z } from "zod";
 import type { brandFormSchema } from "@/lib/schema";
 
@@ -19,7 +21,7 @@ export async function generateIdentityAction(
   try {
     const { brandName, merchandise, mainColor, style, logoFile } = values;
 
-    if (!logoFile || logoFile.size === 0) {
+    if (!logoFile) {
       return { error: 'Logo file is required.' };
     }
 
@@ -40,6 +42,18 @@ export async function generateIdentityAction(
     return { imageUrl: result.imageUrl };
   } catch (error: any) {
     console.error("Error in generateIdentityAction:", error);
+    return { error: error.message || "An unknown error occurred." };
+  }
+}
+
+export async function suggestImprovementsAction(
+  values: SuggestBrandImprovementsInput
+): Promise<{ improvements?: string; error?: string }> {
+  try {
+    const result = await suggestBrandImprovements(values);
+    return { improvements: result.improvements };
+  } catch (error: any) {
+    console.error("Error in suggestImprovementsAction:", error);
     return { error: error.message || "An unknown error occurred." };
   }
 }

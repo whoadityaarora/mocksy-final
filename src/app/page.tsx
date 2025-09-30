@@ -7,7 +7,7 @@ import type { z } from 'zod';
 import { signInAnonymously, type AuthError } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 
-import { generateIdentityAction } from '@/app/actions';
+import { generateIdentityAction, suggestImprovementsAction } from '@/app/actions';
 import { brandFormSchema } from '@/lib/schema';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -15,9 +15,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { AlertDialog, AlertDialogAction, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Download, Upload, Zap, Sparkles, AlertCircle, Loader2 } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { Textarea } from '@/components/ui/textarea';
+import { Download, Upload, Zap, Sparkles, AlertCircle, Loader2, Wand2 } from 'lucide-react';
 
 const STYLE_OPTIONS = ['Modern', 'Minimalist', 'Vintage', 'Urban', 'Futuristic', 'Eco-Natural', 'Sporty', 'Luxury', 'Geometric'];
 const DEFAULT_MERCH = 'coffee mug, paper bag, billboard, cap';
@@ -26,9 +27,10 @@ export default function Home() {
   const [userId, setUserId] = useState<string | null>(null);
   const [generatedImageUrl, setGeneratedImageUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isImproving, setIsImproving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [improvements, setImprovements] = useState<string | null>(null);
   const [statusMessage, setStatusMessage] = useState('Upload your logo and define your brand identity inputs.');
-  const { toast } = useToast();
   
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -90,6 +92,34 @@ export default function Home() {
     }
   };
 
+  const onImprove = async () => {
+    if (!generatedImageUrl) return;
+    setIsImproving(true);
+    setError(null);
+    
+    try {
+      const values = form.getValues();
+      const result = await suggestImprovementsAction({
+        brandName: values.brandName,
+        mainColor: values.mainColor,
+        style: values.style,
+        merchandise: values.merchandise,
+        generatedImageUrl: generatedImageUrl,
+      });
+
+      if (result.error) {
+        throw new Error(result.error);
+      }
+      setImprovements(result.improvements ?? 'No suggestions available.');
+
+    } catch (e: any) {
+       const errorMessage = e.message || "An unexpected error occurred.";
+       setError(`Failed to get suggestions. Error: ${errorMessage}.`);
+    } finally {
+      setIsImproving(false);
+    }
+  };
+
   const downloadImage = useCallback(() => {
     if (generatedImageUrl) {
       const link = document.createElement('a');
@@ -101,7 +131,7 @@ export default function Home() {
     }
   }, [generatedImageUrl, form]);
   
-  const logoFileName = logoFile && logoFile.length > 0 ? logoFile[0].name : null;
+  const logoFileName = logoFile ? logoFile.name : null;
   const isGenerateDisabled = isLoading || !logoFileName;
 
   return (
@@ -144,7 +174,7 @@ export default function Home() {
               <FormField
                 control={form.control}
                 name="logoFile"
-                render={({ field }) => (
+                render={({ field: { onChange, ...rest } }) => (
                   <FormItem>
                     <FormLabel>Upload Logo Image (Required)</FormLabel>
                     <FormControl>
@@ -167,7 +197,7 @@ export default function Home() {
                               type="file" 
                               className="sr-only" 
                               accept="image/png, image/jpeg, image/jpg"
-                              onChange={(e) => field.onChange(e.target.files)}
+                              onChange={(e) => onChange(e.target.files?.[0])}
                             />
                             </div>
                             <p className="text-xs text-muted-foreground/70">PNG/JPG up to 5MB</p>
@@ -253,7 +283,7 @@ export default function Home() {
                 {error && (
                     <Alert variant="destructive">
                         <AlertCircle className="h-4 w-4" />
-                        <AlertTitle>Generation Failed</AlertTitle>
+                        <AlertTitle>Action Failed</AlertTitle>
                         <AlertDescription>{error}</AlertDescription>
                     </Alert>
                 )}
@@ -272,7 +302,11 @@ export default function Home() {
                           alt="Generated Brand Identity Mockup"
                           className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
                       />
-                      <div className="absolute bottom-4 right-4">
+                      <div className="absolute bottom-4 right-4 flex space-x-2">
+                          <Button onClick={onImprove} disabled={isImproving} className="shadow-lg transition-transform transform hover:scale-105 active:scale-95">
+                              {isImproving ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <Wand2 className="mr-2 h-5 w-5" />}
+                              <span>Improve</span>
+                          </Button>
                           <Button onClick={downloadImage} className="shadow-lg transition-transform transform hover:scale-105 active:scale-95">
                               <Download className="mr-2 h-5 w-5" />
                               <span>Download</span>
@@ -305,6 +339,25 @@ export default function Home() {
             </div>
         </Card>
       </main>
+
+      <AlertDialog open={!!improvements} onOpenChange={(open) => !open && setImprovements(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Brand Improvement Suggestions</AlertDialogTitle>
+            <AlertDialogDescription>
+              Here are some AI-powered suggestions to further enhance your brand identity.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <Textarea
+            readOnly
+            value={improvements ?? ''}
+            className="my-4 h-48 bg-muted/50"
+          />
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={() => setImprovements(null)}>Got it!</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

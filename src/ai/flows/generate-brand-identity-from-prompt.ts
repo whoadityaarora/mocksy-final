@@ -8,7 +8,6 @@
  */
 
 import {ai} from '@/ai/genkit';
-import {renderPrompt} from 'genkit';
 import {z} from 'genkit';
 
 const GenerateBrandIdentityFromPromptInputSchema = z.object({
@@ -29,52 +28,37 @@ export async function generateBrandIdentityFromPrompt(input: GenerateBrandIdenti
   return generateBrandIdentityFromPromptFlow(input);
 }
 
-const generateBrandIdentityPrompt = ai.definePrompt({
-  name: 'generateBrandIdentityPrompt',
-  input: {schema: GenerateBrandIdentityFromPromptInputSchema},
-  prompt: `You are an AI-powered brand identity generator. Your task is to create a single, high-quality, professional studio mockup image that visually represents a brand identity based on the user's logo and brand details.
-
-Brand Details:
-- Brand Name: {{{brandName}}}
-- Merchandise Items: {{{merchandise}}}
-- Main Color Theme: {{{mainColor}}}
-- Design Style: {{{style}}}
-- Logo: {{media url=logoDataUri}}
-
-Instructions:
-- Create a cohesive set of visual designs for the brand, ensuring that all elements align with the provided brand details.
-- The provided logo must be prominently and clearly displayed on all merchandise items.
-- The products displayed should be: {{{merchandise}}}.
-- The main visual color and color palette should be dominated by: {{{mainColor}}}.
-- The overall design and presentation must be in a {{{style}}} style. Ensure the logo is perfectly rendered on all items with excellent lighting and resolution.
-- The final image must be structured using a **2x3 grid layout** for high visual impact and clarity. Apply **universal spacing** (negative space) around each item to prevent clutter. The arrangement must emphasize **visual hierarchy** so that the most important items draw the viewer's eye first. Maintain a clean, studio-quality aesthetic.
-
-Output:
-Return a data URI containing the generated PNG image. It is very important that this be a valid data URI.
-`,
-});
-
 const generateBrandIdentityFromPromptFlow = ai.defineFlow(
   {
     name: 'generateBrandIdentityFromPromptFlow',
     inputSchema: GenerateBrandIdentityFromPromptInputSchema,
     outputSchema: GenerateBrandIdentityFromPromptOutputSchema,
   },
-  async input => {
-    const renderedPrompt = await renderPrompt({
-      prompt: generateBrandIdentityPrompt,
-      input: input,
-    });
-    
-    const textPart = renderedPrompt.prompt.find(p => p.text);
-    if (!textPart?.text) {
-      throw new Error('Could not render prompt text.');
-    }
-    
+  async (input) => {
+    const prompt = `You are an AI-powered brand identity generator. Your task is to create a single, high-quality, professional studio mockup image that visually represents a brand identity based on the user's logo and brand details.
+
+Brand Details:
+- Brand Name: ${input.brandName}
+- Merchandise Items: ${input.merchandise}
+- Main Color Theme: ${input.mainColor}
+- Design Style: ${input.style}
+
+Instructions:
+- Create a cohesive set of visual designs for the brand, ensuring that all elements align with the provided brand details.
+- The provided logo must be prominently and clearly displayed on all merchandise items.
+- The products displayed should be: ${input.merchandise}.
+- The main visual color and color palette should be dominated by: ${input.mainColor}.
+- The overall design and presentation must be in a ${input.style} style. Ensure the logo is perfectly rendered on all items with excellent lighting and resolution.
+- The final image must be structured using a **2x3 grid layout** for high visual impact and clarity. Apply **universal spacing** (negative space) around each item to prevent clutter. The arrangement must emphasize **visual hierarchy** so that the most important items draw the viewer's eye first. Maintain a clean, studio-quality aesthetic.
+
+Output:
+Return a data URI containing the generated PNG image. It is very important that this be a valid data URI.
+`;
+
     const {media} = await ai.generate({
       model: 'googleai/gemini-2.5-flash-image-preview',
       prompt: [
-        {text: textPart.text},
+        {text: prompt},
         {media: {url: input.logoDataUri}},
       ],
       config: {
