@@ -155,7 +155,7 @@ export default function Home() {
           <span>Mocksy</span>
         </h1>
         <p className="mt-2 text-muted-foreground">
-          Define your brand elements and let AI generate a single, high-quality, multi-item mockup image.
+          AI-Powered Brand Identity Mockups Generator
         </p>
         {userId && (
           <p className="mt-1 text-xs text-muted-foreground/80">
