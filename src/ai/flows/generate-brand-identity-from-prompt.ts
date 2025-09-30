@@ -63,7 +63,7 @@ const generateBrandIdentityFromPromptFlow = ai.defineFlow(
     const {media} = await ai.generate({
       model: 'googleai/gemini-2.5-flash-image-preview',
       prompt: [
-        {text: (await generateBrandIdentityPrompt(input)).prompt},
+        {text: (await generateBrandIdentityPrompt(input)).prompt[0].text},
         {media: {url: input.logoDataUri}},
       ],
       config: {
