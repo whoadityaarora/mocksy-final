@@ -41,7 +41,7 @@ export default function Home() {
     defaultValues: {
       brandName: '',
       mainColor: '',
-      style: undefined,
+      style: '',
       merchandise: '',
       logoFile: undefined,
     },
@@ -248,7 +248,7 @@ export default function Home() {
                   <FormItem>
                     <FormLabel>Main Color Theme *</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., Violet, Emerald Green, Neon Pink" {...field} />
+                      <Input placeholder="e.g., Violet, #FF0000" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
