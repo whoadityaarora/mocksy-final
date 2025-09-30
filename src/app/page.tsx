@@ -228,7 +228,7 @@ export default function Home() {
                               ref={fileInputRef} 
                               type="file" 
                               className="sr-only" 
-                              accept="image/png, image/jpeg, image/jpg"
+                              accept="image/png, image/jpeg, image/jpg, image/webp, image/heic"
                               onChange={(e) => onChange(e.target.files?.[0])}
                             />
                          </div>
@@ -261,7 +261,7 @@ export default function Home() {
                   <FormItem>
                     <FormLabel>Main Color Theme *</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., Violet, #FF0000" {...field} />
+                      <Input placeholder="e.g., Violet or #8A2BE2" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
