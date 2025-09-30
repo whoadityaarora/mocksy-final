@@ -18,6 +18,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertDialog, AlertDialogAction, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from "@/components/ui/carousel";
 import { Download, Upload, Zap, Sparkles, AlertCircle, Loader2, Wand2 } from 'lucide-react';
 import Image from 'next/image';
 
@@ -28,13 +29,16 @@ const MAX_GENERATIONS = 5;
 export default function Home() {
   const [userId, setUserId] = useState<string | null>(null);
   const [usageCount, setUsageCount] = useState(0);
-  const [generatedImageUrl, setGeneratedImageUrl] = useState<string | null>(null);
+  const [generatedImageUrls, setGeneratedImageUrls] = useState<string[]>([]);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [isImproving, setIsImproving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [improvements, setImprovements] = useState<string | null>(null);
   const [statusMessage, setStatusMessage] = useState('Upload your logo and define your brand identity inputs.');
   const [logoPreviewUrl, setLogoPreviewUrl] = useState<string | null>(null);
+  const [carouselApi, setCarouselApi] = useState<CarouselApi>();
+
   
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -95,11 +99,19 @@ export default function Home() {
     };
     signIn();
   }, []);
+  
+  useEffect(() => {
+    if (carouselApi) {
+      carouselApi.on("select", () => {
+        setCurrentImageIndex(carouselApi.selectedScrollSnap());
+      });
+    }
+  }, [carouselApi]);
 
   const onSubmit = async (values: z.infer<typeof brandFormSchema>) => {
     setIsLoading(true);
     setError(null);
-    setGeneratedImageUrl(null);
+    setGeneratedImageUrls([]);
     setStatusMessage('Generating cohesive brand identity mockups...');
 
     try {
@@ -109,7 +121,8 @@ export default function Home() {
         throw new Error(result.error);
       }
       
-      setGeneratedImageUrl(result.imageUrl as string);
+      setGeneratedImageUrls([result.imageUrl as string]);
+      setCurrentImageIndex(0);
       setStatusMessage('Brand identity successfully generated! Review and download your high-resolution mockups.');
       
       // if(userId) fetchUsage(userId);
@@ -124,7 +137,9 @@ export default function Home() {
   };
 
   const onImprove = async () => {
-    if (!generatedImageUrl) return;
+    const currentImageUrl = generatedImageUrls[currentImageIndex];
+    if (!currentImageUrl) return;
+
     setIsImproving(true);
     setError(null);
     
@@ -135,7 +150,7 @@ export default function Home() {
         mainColor: values.mainColor,
         style: values.style,
         merchandise: values.merchandise,
-        generatedImageUrl: generatedImageUrl,
+        generatedImageUrl: currentImageUrl,
       });
 
       if (result.error) {
@@ -152,18 +167,20 @@ export default function Home() {
   };
 
   const downloadImage = useCallback(() => {
-    if (generatedImageUrl) {
+    const currentImageUrl = generatedImageUrls[currentImageIndex];
+    if (currentImageUrl) {
       const link = document.createElement('a');
-      link.href = generatedImageUrl;
+      link.href = currentImageUrl;
       link.download = `${(form.getValues('brandName') || 'brand').toLowerCase().replace(/\s/g, '_')}_mockups_${Date.now()}.png`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
     }
-  }, [generatedImageUrl, form]);
+  }, [generatedImageUrls, currentImageIndex, form]);
   
   // const isLimitReached = usageCount >= MAX_GENERATIONS;
   const isGenerateDisabled = isLoading || !logoFile; // || isLimitReached;
+  const currentImageUrl = generatedImageUrls[currentImageIndex] ?? null;
 
   return (
     <div className="min-h-screen bg-background p-4 sm:p-8 font-body text-foreground">
@@ -211,7 +228,7 @@ export default function Home() {
                          <div className="space-y-1 text-center">
                             {logoPreviewUrl ? (
                               <div className='relative w-40 h-40 mx-auto'>
-                                <Image src={logoPreviewUrl} alt="Logo Preview" layout="fill" objectFit="contain" />
+                                <Image src={logoPreviewUrl} alt="Logo Preview" fill objectFit="contain" />
                               </div>
                             ) : (
                               <>
@@ -332,26 +349,14 @@ export default function Home() {
             </div>
 
             <div className="relative border-4 border-dashed border-muted rounded-2xl overflow-hidden flex-grow min-h-[500px] flex items-center justify-center bg-background/50 p-4">
-              {generatedImageUrl && !isLoading && (
-                  <>
-                      <img
-                          src={generatedImageUrl}
-                          alt="Generated Brand Identity Mockup"
-                          className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
-                      />
-                      <div className="absolute bottom-4 right-4 flex space-x-2">
-                          <Button onClick={onImprove} disabled={isImproving} className="shadow-lg transition-transform transform hover:scale-105 active:scale-95">
-                              {isImproving ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <Wand2 className="mr-2 h-5 w-5" />}
-                              <span>Improve</span>
-                          </Button>
-                          <Button onClick={downloadImage} className="shadow-lg transition-transform transform hover:scale-105 active:scale-95">
-                              <Download className="mr-2 h-5 w-5" />
-                              <span>Download</span>
-                          </Button>
-                      </div>
-                  </>
+              {currentImageUrl && !isLoading && (
+                  <img
+                      src={currentImageUrl}
+                      alt="Generated Brand Identity Mockup"
+                      className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
+                  />
               )}
-              {!generatedImageUrl && !isLoading && (
+              {!currentImageUrl && !isLoading && (
                   <div className="text-center text-muted-foreground p-10">
                       <Sparkles className="mx-auto h-16 w-16 text-primary/10 mb-4" />
                       <p className="text-lg font-semibold">
@@ -374,6 +379,49 @@ export default function Home() {
                   </div>
               )}
             </div>
+            
+            {generatedImageUrls.length > 0 && !isLoading && (
+              <div className="relative w-full p-4">
+                 <Carousel setApi={setCarouselApi} className="w-full max-w-xs mx-auto">
+                    <CarouselContent>
+                      {generatedImageUrls.map((url, index) => (
+                        <CarouselItem key={index} className="basis-1/3">
+                          <div className="p-1">
+                            <Card 
+                              className={`overflow-hidden cursor-pointer transition-all ${index === currentImageIndex ? 'border-primary border-2' : 'border-muted'}`}
+                              onClick={() => carouselApi?.scrollTo(index)}
+                            >
+                              <div className="relative aspect-square">
+                                <Image
+                                  src={url}
+                                  alt={`Generated Mockup ${index + 1}`}
+                                  fill
+                                  className="object-cover"
+                                />
+                              </div>
+                            </Card>
+                          </div>
+                        </CarouselItem>
+                      ))}
+                    </CarouselContent>
+                    <CarouselPrevious />
+                    <CarouselNext />
+                  </Carousel>
+              </div>
+            )}
+            
+            {currentImageUrl && !isLoading && (
+                <div className="flex justify-center space-x-2 mt-4">
+                    <Button onClick={onImprove} disabled={isImproving} className="shadow-lg transition-transform transform hover:scale-105 active:scale-95">
+                        {isImproving ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <Wand2 className="mr-2 h-5 w-5" />}
+                        <span>Improve</span>
+                    </Button>
+                    <Button onClick={downloadImage} className="shadow-lg transition-transform transform hover:scale-105 active:scale-95">
+                        <Download className="mr-2 h-5 w-5" />
+                        <span>Download</span>
+                    </Button>
+                </div>
+            )}
         </Card>
       </main>
 
