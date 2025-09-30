@@ -35,7 +35,18 @@ const generateBrandIdentityFromPromptFlow = ai.defineFlow(
     outputSchema: GenerateBrandIdentityFromPromptOutputSchema,
   },
   async (input) => {
-    const prompt = `You are an AI-powered brand identity generator. Your task is to create a single, high-quality, professional studio mockup image that visually represents a brand identity based on the user's logo and brand details.
+
+    const itemCount = input.merchandise.split(',').filter(item => item.trim() !== '').length;
+    let gridInstruction = '';
+    if (itemCount <= 3) {
+      gridInstruction = `a single row grid`;
+    } else if (itemCount === 4) {
+      gridInstruction = `a 2x2 grid`;
+    } else {
+      gridInstruction = `a 2x3 grid`;
+    }
+
+    const promptText = `You are an AI-powered brand identity generator. Your task is to create a single, high-quality, professional studio mockup image that visually represents a brand identity based on the user's logo and brand details.
 
 Brand Details:
 - Brand Name: ${input.brandName}
@@ -49,7 +60,7 @@ Instructions:
 - The products displayed should be: ${input.merchandise}.
 - The main visual color and color palette should be dominated by: ${input.mainColor}.
 - The overall design and presentation must be in a ${input.style} style. Ensure the logo is perfectly rendered on all items with excellent lighting and resolution.
-- The final image must be structured using a **2x3 grid layout** for high visual impact and clarity. Apply **universal spacing** (negative space) around each item to prevent clutter. The arrangement must emphasize **visual hierarchy** so that the most important items draw the viewer's eye first. Maintain a clean, studio-quality aesthetic.
+- The final image must be structured using ${gridInstruction} for high visual impact and clarity. Do not repeat items to fill empty grid cells. Apply **universal spacing** (negative space) around each item to prevent clutter. The arrangement must emphasize **visual hierarchy** so that the most important items draw the viewer's eye first. Maintain a clean, studio-quality aesthetic.
 
 Output:
 Return a data URI containing the generated PNG image. It is very important that this be a valid data URI.
@@ -58,7 +69,7 @@ Return a data URI containing the generated PNG image. It is very important that 
     const {media} = await ai.generate({
       model: 'googleai/gemini-2.5-flash-image-preview',
       prompt: [
-        {text: prompt},
+        {text: promptText},
         {media: {url: input.logoDataUri}},
       ],
       config: {
