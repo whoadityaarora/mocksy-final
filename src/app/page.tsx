@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { z } from 'zod';
-import { signInAnonymously } from 'firebase/auth';
+import { signInAnonymously, type AuthError } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 
 import { generateIdentityAction } from '@/app/actions';
@@ -17,6 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Download, Upload, Zap, Sparkles, AlertCircle, Loader2 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 const STYLE_OPTIONS = ['Modern', 'Minimalist', 'Vintage', 'Urban', 'Futuristic', 'Eco-Natural', 'Sporty', 'Luxury', 'Geometric'];
 const DEFAULT_MERCH = 'coffee mug, paper bag, billboard, cap';
@@ -27,6 +28,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [statusMessage, setStatusMessage] = useState('Upload your logo and define your brand identity inputs.');
+  const { toast } = useToast();
   
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -49,8 +51,15 @@ export default function Home() {
         const userCredential = await signInAnonymously(auth);
         setUserId(userCredential.user.uid);
       } catch (authError) {
-        console.error("Firebase authentication failed:", authError);
-        setUserId(crypto.randomUUID()); // Fallback for local dev
+        const firebaseError = authError as AuthError;
+        if (firebaseError.code === 'auth/operation-not-allowed' || firebaseError.code === 'auth/configuration-not-found') {
+          console.warn(
+            "Firebase Anonymous Authentication is not enabled. Using a fallback temporary user ID. To persist user data, please enable Anonymous Sign-In in your Firebase project's Authentication settings."
+          );
+        } else {
+          console.error('Firebase authentication failed:', firebaseError);
+        }
+        setUserId(crypto.randomUUID()); // Fallback for local dev or if auth is not enabled
       }
     };
     signIn();
