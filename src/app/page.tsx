@@ -193,15 +193,15 @@ export default function Home() {
 
       <header className="text-center mb-2">
         <div className="flex items-center justify-center space-x-2">
-             <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 100 100"
-                className="h-10 w-10 text-primary"
-                fill="currentColor"
-              >
-                <path d="M10 90 L10 10 L30 10 L30 50 L50 30 L70 50 L70 10 L90 10 L90 90 L70 90 L70 60 L50 80 L30 60 L30 90 Z" />
-              </svg>
-            <span className="text-3xl font-bold"> Mocksy</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 100 100"
+              className="h-10 w-10 text-primary"
+              fill="currentColor"
+            >
+              <path d="M10 90 L10 10 L30 10 L30 50 L50 30 L70 50 L70 10 L90 10 L90 90 L70 90 L70 60 L50 80 L30 60 L30 90 Z" />
+            </svg>
+            <span className="text-3xl font-semibold"> Mocksy</span>
         </div>
         <p className="mt-1 text-muted-foreground text-sm">
           AI-Powered Brand Identity Mockups Generator
@@ -212,7 +212,7 @@ export default function Home() {
         <Card className="lg:col-span-1 glass-card rounded-2xl flex flex-col">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="p-6 space-y-4 flex flex-col flex-grow">
-              <h2 className="text-xl font-bold text-card-foreground">Brand Definition</h2>
+              <h2 className="text-xl font-semibold text-card-foreground">Brand Definition</h2>
               
               <div className="space-y-4 flex-grow">
                 <FormField
@@ -330,7 +330,7 @@ export default function Home() {
               </div>
 
               <div className='!mt-auto space-y-2'>
-                <Button type="submit" disabled={isGenerateDisabled} className="w-full text-base font-semibold py-5 transition-transform transform hover:scale-[1.02] active:scale-[0.98] rounded-lg bg-primary text-primary-foreground">
+                <Button type="submit" disabled={isGenerateDisabled} className="w-full text-base font-medium py-5 transition-transform transform hover:scale-[1.02] active:scale-[0.98] rounded-lg bg-primary text-primary-foreground">
                   {isLoading ? (
                     <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                   ) : (
@@ -344,7 +344,7 @@ export default function Home() {
         </Card>
 
         <Card className="lg:col-span-2 p-4 flex flex-col glass-card rounded-2xl">
-           <h2 className="text-xl font-bold text-card-foreground mb-4">Generated Mockups</h2>
+           <h2 className="text-xl font-semibold text-card-foreground mb-4">Generated Mockups</h2>
           
             <div className="min-h-12 mb-4">
                 {error && (
@@ -384,7 +384,7 @@ export default function Home() {
               ) : !isLoading && (
                   <div className="text-center text-muted-foreground p-10">
                       <Sparkles className="mx-auto h-16 w-16 text-muted-foreground/20 mb-4" />
-                      <p className="text-lg font-semibold">
+                      <p className="text-lg font-medium">
                           Your masterpiece will appear here.
                       </p>
                   </div>
@@ -423,11 +423,11 @@ export default function Home() {
             
             {currentImageUrl && !isLoading && (
                 <div className="flex justify-center space-x-4 mt-2">
-                    <Button onClick={onImprove} disabled={isImproving} className="shadow-lg transition-transform transform hover:scale-105 active:scale-95 bg-primary text-primary-foreground rounded-lg px-6 py-5 font-semibold">
+                    <Button onClick={onImprove} disabled={isImproving} className="shadow-lg transition-transform transform hover:scale-105 active:scale-95 bg-primary text-primary-foreground rounded-lg px-6 py-5 font-medium">
                         {isImproving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
                         <span>Improve</span>
                     </Button>
-                    <Button onClick={downloadImage} variant="outline" className="shadow-lg transition-transform transform hover:scale-105 active:scale-95 bg-card/50 border-border hover:bg-input/50 hover:text-foreground rounded-lg px-6 py-5 font-semibold">
+                    <Button onClick={downloadImage} variant="outline" className="shadow-lg transition-transform transform hover:scale-105 active:scale-95 bg-card/50 border-border hover:bg-input/50 hover:text-foreground rounded-lg px-6 py-5 font-medium">
                         <Download className="mr-2 h-4 w-4" />
                         <span>Download File</span>
                     </Button>
@@ -457,5 +457,3 @@ export default function Home() {
     </div>
   );
 }
-
-    
