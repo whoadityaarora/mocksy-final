@@ -189,7 +189,7 @@ export default function Home() {
   const currentImageUrl = generatedImageUrls.length > 0 ? generatedImageUrls[currentImageIndex] : null;
 
   return (
-    <div className="relative h-screen flex flex-col p-2 font-body text-foreground">
+    <div className="relative h-screen flex flex-col p-2 px-8 font-body text-foreground">
 
       <header className="text-center py-2">
         <div className="flex items-center justify-center space-x-2">
@@ -457,5 +457,3 @@ export default function Home() {
     </div>
   );
 }
-
-    
