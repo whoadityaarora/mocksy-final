@@ -225,23 +225,22 @@ export default function Home() {
   const currentImageUrl = generatedImageUrls.length > 0 ? generatedImageUrls[currentImageIndex] : null;
 
   return (
-    <div className="relative h-screen flex flex-col pt-2 px-8 pb-4 sm:px-6 sm:pb-6 md:px-8 md:pb-8 font-body text-foreground">
+    <div className="relative h-screen flex flex-col px-8 pb-4 sm:px-6 sm:pb-6 md:px-8 md:pb-8 font-body text-foreground">
 
-      <header className="text-center py-2">
-        <div className="flex items-center justify-center space-x-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 256 256"
-              className="h-14 w-14 text-primary"
-            >
-              <path
-                fill="currentColor"
-                d="M160 208a8 8 0 0 1-8 8H48a16 16 0 0 1-16-16V48a16 16 0 0 1 16-16h104a8 8 0 0 1 0 16H48v144h104a8 8 0 0 1 8 8Zm53.66-157.66a8 8 0 0 0-11.32 0L128 124.69l-34.34-34.35a8 8 0 0 0-11.32 11.32L116.69 136l-34.35 34.34a8 8 0 0 0 11.32 11.32L128 147.31l34.34 34.35a8 8 0 0 0 11.32-11.32L139.31 136l34.35-34.34a8 8 0 0 0 0-11.32Z"
-              ></path>
-            </svg>
+      <header className="text-center py-4">
+        <div className="flex items-center justify-center space-x-3">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 256 256"
+            className="h-12 w-12 text-primary"
+            fill="currentColor"
+          >
+            <path d="M244 80h-40V64a16 16 0 0 0-16-16h-48a16 16 0 0 0-16 16v16H80a16 16 0 0 0-16 16v40H24a16 16 0 0 0-16 16v48a16 16 0 0 0 16 16h40v16a16 16 0 0 0 16 16h48a16 16 0 0 0 16-16v-16h40a16 16 0 0 0 16-16v-40h40a16 16 0 0 0 16-16v-48a16 16 0 0 0-16-16Zm-56-16h40l-40 40Zm-64 0h48v48h-48ZM80 96h40V80H80Zm0 48v-40h40v40Zm-16 64H24v-48h48v48Zm112 16h-48v-48h48Zm16-64h-40v-40h40Zm48 48h-48v-48h48v48Z" />
+            <path d="m221.16 53.16-28.28 28.28a12 12 0 0 1-17 0l-11.32-11.32a12 12 0 0 1 0-17l28.28-28.28a12 12 0 0 1 17 0l11.32 11.32a12 12 0 0 1 0 17Z" opacity="0.5" />
+          </svg>
             <span className="text-5xl font-semibold text-primary">Mocksy</span>
         </div>
-        <p className="mt-1 text-muted-foreground text-lg font-regular">
+        <p className="mt-2 text-muted-foreground text-lg font-regular">
           AI-Powered Brand Identity Mockups Generator
         </p>
       </header>
@@ -496,4 +495,5 @@ export default function Home() {
     
 
     
+
 
