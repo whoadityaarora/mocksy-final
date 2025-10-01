@@ -4,6 +4,8 @@ import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { generateBrandIdentityFromPrompt } from "@/ai/flows/generate-brand-identity-from-prompt";
 import { suggestBrandImprovements } from "@/ai/flows/suggest-brand-improvements";
+import { regenerateBrandIdentityFromCritique, type RegenerateBrandIdentityFromCritiqueInput } from "@/ai/flows/regenerate-brand-identity-from-critique";
+
 import type { SuggestBrandImprovementsInput } from "@/ai/flows/suggest-brand-improvements";
 import type { z } from "zod";
 import type { brandFormSchema } from "@/lib/schema";
@@ -106,14 +108,48 @@ export async function generateIdentityAction(
   }
 }
 
-export async function suggestImprovementsAction(
-  values: SuggestBrandImprovementsInput
-): Promise<{ improvements?: string; error?: string }> {
+export async function regenerateIdentityAction(
+  values: RegenerateBrandIdentityFromCritiqueInput,
+  userId: string | null
+): Promise<{ imageUrl?: string; error?: string }> {
+   if (!userId) {
+    return { error: "User authentication failed. Please refresh and try again." };
+  }
+
   try {
-    const result = await suggestBrandImprovements(values);
-    return { improvements: result.improvements };
+    // First, get the improvement suggestions.
+    const suggestionsResult = await suggestBrandImprovements({
+      brandName: values.brandName,
+      mainColor: values.mainColor,
+      style: values.style,
+      merchandise: values.merchandise,
+      generatedImageUrl: values.previousImageUrl,
+    });
+
+    if (suggestionsResult.error) {
+      throw new Error(suggestionsResult.error);
+    }
+    
+    if (!suggestionsResult.improvements) {
+      throw new Error("Could not get improvement suggestions.");
+    }
+    
+    // Then, use the suggestions to generate a new image.
+    const regenerationResult = await regenerateBrandIdentityFromCritique({
+      ...values,
+      critique: suggestionsResult.improvements,
+    });
+
+    if (regenerationResult.error) {
+      throw new Error(regenerationResult.error);
+    }
+
+    // await incrementUserUsage(userId);
+
+    return { imageUrl: regenerationResult.imageUrl };
+
   } catch (error: any) {
-    console.error("Error in suggestImprovementsAction:", error);
+    console.error("Error in regenerateIdentityAction:", error);
     return { error: error.message || "An unknown error occurred." };
   }
 }

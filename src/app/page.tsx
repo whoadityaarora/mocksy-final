@@ -8,7 +8,7 @@ import type { z } from 'zod';
 import { signInAnonymously, type AuthError } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 
-import { generateIdentityAction, suggestImprovementsAction, getUserUsage } from '@/app/actions';
+import { generateIdentityAction, regenerateIdentityAction, getUserUsage } from '@/app/actions';
 import { brandFormSchema } from '@/lib/schema';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -16,9 +16,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertDialog, AlertDialogAction, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Textarea } from '@/components/ui/textarea';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from "@/components/ui/carousel";
 import { Download, Upload, Zap, Sparkles, AlertCircle, Loader2, Wand2 } from 'lucide-react';
 import Image from 'next/image';
@@ -35,7 +33,6 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [isImproving, setIsImproving] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [improvements, setImprovements] = useState<string | null>(null);
   const [statusMessage, setStatusMessage] = useState('Upload your logo and define the brand identity unputs.');
   const [logoPreviewUrl, setLogoPreviewUrl] = useState<string | null>(null);
   const [carouselApi, setCarouselApi] = useState<CarouselApi>();
@@ -125,7 +122,7 @@ export default function Home() {
       }
       
       if (result.imageUrl) {
-        setGeneratedImageUrls(prev => [...prev, result.imageUrl]);
+        setGeneratedImageUrls(prev => [result.imageUrl]);
         setStatusMessage('Brand identity successfully generated! Review and download your high-resolution mockups.');
         carouselApi?.scrollTo(0);
       } else {
@@ -145,29 +142,52 @@ export default function Home() {
 
   const onImprove = async () => {
     const currentImageUrl = generatedImageUrls[currentImageIndex];
-    if (!currentImageUrl) return;
+    if (!currentImageUrl || !logoFile) {
+        setError("Cannot improve without a generated image and a logo.");
+        return;
+    };
 
     setIsImproving(true);
     setError(null);
+    setStatusMessage('Applying AI suggestions to generate an improved mockup...');
     
     try {
-      const values = form.getValues();
-      const result = await suggestImprovementsAction({
-        brandName: values.brandName ?? 'brand',
-        mainColor: values.mainColor,
-        style: values.style,
-        merchandise: values.merchandise,
-        generatedImageUrl: currentImageUrl,
-      });
+        const values = form.getValues();
+        const arrayBuffer = await logoFile.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+        const logoDataUri = `data:${logoFile.type};base64,${buffer.toString("base64")}`;
 
-      if (result.error) {
-        throw new Error(result.error);
-      }
-      setImprovements(result.improvements ?? 'No suggestions available.');
+
+        const result = await regenerateIdentityAction({
+            brandName: values.brandName ?? 'brand',
+            mainColor: values.mainColor,
+            style: values.style,
+            merchandise: values.merchandise,
+            previousImageUrl: currentImageUrl,
+            logoDataUri: logoDataUri,
+        }, userId);
+
+        if (result.error) {
+            throw new Error(result.error);
+        }
+
+        if (result.imageUrl) {
+            const newImageIndex = generatedImageUrls.length;
+            setGeneratedImageUrls(prev => [...prev, result.imageUrl]);
+            setStatusMessage('Successfully generated an improved mockup!');
+            
+            // Wait for the state to update and then scroll
+            setTimeout(() => carouselApi?.scrollTo(newImageIndex), 0);
+        } else {
+            throw new Error("The AI model did not return an improved image.");
+        }
+        
+        // if(userId) fetchUsage(userId);
 
     } catch (e: any) {
        const errorMessage = e.message || "An unexpected error occurred.";
-       setError(`Failed to get suggestions. Error: ${errorMessage}.`);
+       setError(`Failed to generate improvement. Error: ${errorMessage}.`);
+       setStatusMessage('Improvement failed.');
     } finally {
       setIsImproving(false);
     }
@@ -185,7 +205,8 @@ export default function Home() {
     }
   }, [generatedImageUrls, currentImageIndex, form]);
   
-  const isGenerateDisabled = isLoading || !logoFile; 
+  const isGenerateDisabled = isLoading || !logoFile || isImproving; 
+  const isImproveDisabled = isLoading || isImproving || generatedImageUrls.length === 0;
   const currentImageUrl = generatedImageUrls.length > 0 ? generatedImageUrls[currentImageIndex] : null;
 
   return (
@@ -362,12 +383,12 @@ export default function Home() {
             </div>
             
             <div className="relative border-2 border-dashed border-border rounded-2xl overflow-hidden flex-grow flex items-center justify-center bg-input/50 p-4">
-              {isLoading && (
+              {(isLoading || isImproving) && (
                    <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-10">
                       <div className="text-center">
                           <Loader2 className="h-12 w-12 text-primary animate-spin mx-auto" />
                           <p className="mt-4 text-primary font-semibold text-lg">
-                              AI is crafting your brand identity...
+                              {isLoading ? 'AI is crafting your brand identity...' : 'AI is improving your mockup...'}
                           </p>
                           <p className="mt-1 text-sm text-muted-foreground font-regular">
                               This may take a moment.
@@ -375,13 +396,13 @@ export default function Home() {
                       </div>
                   </div>
               )}
-              {currentImageUrl && !isLoading ? (
+              {currentImageUrl && !isLoading && !isImproving ? (
                   <img
                       src={currentImageUrl}
                       alt="Generated Brand Identity Mockup"
                       className="max-w-full max-h-full object-contain rounded-lg"
                   />
-              ) : !isLoading && (
+              ) : !isLoading && !isImproving && (
                   <div className="text-center text-muted-foreground p-10">
                       <Sparkles className="mx-auto h-16 w-16 text-muted-foreground/20 mb-4" />
                       <p className="text-lg font-medium">
@@ -421,9 +442,9 @@ export default function Home() {
               </div>
             )}
             
-            {currentImageUrl && !isLoading && (
+            {currentImageUrl && !isLoading && !isImproving && (
                 <div className="flex justify-center space-x-4 mt-2">
-                    <Button onClick={onImprove} disabled={isImproving} className="shadow-lg transition-transform transform hover:scale-105 active:scale-95 bg-primary text-primary-foreground rounded-lg px-6 py-5 font-medium">
+                    <Button onClick={onImprove} disabled={isImproveDisabled} className="shadow-lg transition-transform transform hover:scale-105 active:scale-95 bg-primary text-primary-foreground rounded-lg px-6 py-5 font-medium">
                         {isImproving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
                         <span>Improve</span>
                     </Button>
@@ -436,24 +457,6 @@ export default function Home() {
         </Card>
       </main>
 
-      <AlertDialog open={!!improvements} onOpenChange={(open) => !open && setImprovements(null)}>
-        <AlertDialogContent className="glass-card">
-          <AlertDialogHeader>
-            <AlertDialogTitle>Brand Improvement Suggestions</AlertDialogTitle>
-            <AlertDialogDescription>
-              Here are some AI-powered suggestions to further enhance your brand identity.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <Textarea
-            readOnly
-            value={improvements ?? ''}
-            className="my-4 h-48 bg-muted/50"
-          />
-          <AlertDialogFooter>
-            <AlertDialogAction onClick={() => setImprovements(null)}>Got it!</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </div>
   );
 }

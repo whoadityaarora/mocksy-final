@@ -25,7 +25,8 @@ const SuggestBrandImprovementsInputSchema = z.object({
 export type SuggestBrandImprovementsInput = z.infer<typeof SuggestBrandImprovementsInputSchema>;
 
 const SuggestBrandImprovementsOutputSchema = z.object({
-  improvements: z.string().describe('Suggestions for improving the brand identity, including alternative color palettes or merchandise options.'),
+  improvements: z.string().optional().describe('Suggestions for improving the brand identity, including alternative color palettes or merchandise options.'),
+  error: z.string().optional().describe("An error message if the generation failed."),
 });
 export type SuggestBrandImprovementsOutput = z.infer<typeof SuggestBrandImprovementsOutputSchema>;
 
@@ -40,25 +41,30 @@ const suggestBrandImprovementsFlow = ai.defineFlow(
     outputSchema: SuggestBrandImprovementsOutputSchema,
   },
   async input => {
-    const prompt = `You are a branding expert providing suggestions for improving brand identities.
+    try {
+      const prompt = `You are a branding expert providing suggestions for improving brand identities.
 
-    Based on the following brand details and the generated mockup image, suggest improvements to the brand identity, including alternative color palettes or merchandise options.
-  
-    Brand Name: ${input.brandName}
-    Main Color: ${input.mainColor}
-    Style: ${input.style}
-    Merchandise: ${input.merchandise}
+      Based on the following brand details and the generated mockup image, suggest improvements to the brand identity, including alternative color palettes or merchandise options.
     
-    Provide concrete and actionable suggestions as a single block of text.
-    `;
+      Brand Name: ${input.brandName}
+      Main Color: ${input.mainColor}
+      Style: ${input.style}
+      Merchandise: ${input.merchandise}
+      
+      Provide concrete and actionable suggestions as a single block of text. Focus on what could be better.
+      `;
+  
+      const {text} = await ai.generate({
+        prompt: [
+          {text: prompt},
+          {media: {url: input.generatedImageUrl}},
+        ],
+      });
+  
+      return {improvements: text};
 
-    const {text} = await ai.generate({
-      prompt: [
-        {text: prompt},
-        {media: {url: input.generatedImageUrl}},
-      ],
-    });
-
-    return {improvements: text};
+    } catch (e: any) {
+        return { error: e.message || 'An unknown error occurred while getting suggestions.' };
+    }
   }
 );
