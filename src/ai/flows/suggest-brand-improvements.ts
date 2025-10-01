@@ -33,23 +33,6 @@ export async function suggestBrandImprovements(input: SuggestBrandImprovementsIn
   return suggestBrandImprovementsFlow(input);
 }
 
-const prompt = ai.definePrompt({
-  name: 'suggestBrandImprovementsPrompt',
-  input: {schema: SuggestBrandImprovementsInputSchema},
-  output: {schema: SuggestBrandImprovementsOutputSchema},
-  prompt: `You are a branding expert providing suggestions for improving brand identities.
-
-  Based on the following brand details and the generated mockup image, suggest improvements to the brand identity, including alternative color palettes or merchandise options.
-
-  Brand Name: {{{brandName}}}
-  Main Color: {{{mainColor}}}
-  Style: {{{style}}}
-  Merchandise: {{{merchandise}}}
-  Mockup Image: {{media url=generatedImageUrl}}
-  \n  Provide concrete and actionable suggestions.
-  `,
-});
-
 const suggestBrandImprovementsFlow = ai.defineFlow(
   {
     name: 'suggestBrandImprovementsFlow',
@@ -57,7 +40,25 @@ const suggestBrandImprovementsFlow = ai.defineFlow(
     outputSchema: SuggestBrandImprovementsOutputSchema,
   },
   async input => {
-    const {output} = await prompt(input);
-    return output!;
+    const prompt = `You are a branding expert providing suggestions for improving brand identities.
+
+    Based on the following brand details and the generated mockup image, suggest improvements to the brand identity, including alternative color palettes or merchandise options.
+  
+    Brand Name: ${input.brandName}
+    Main Color: ${input.mainColor}
+    Style: ${input.style}
+    Merchandise: ${input.merchandise}
+    
+    Provide concrete and actionable suggestions as a single block of text.
+    `;
+
+    const {text} = await ai.generate({
+      prompt: [
+        {text: prompt},
+        {media: {url: input.generatedImageUrl}},
+      ],
+    });
+
+    return {improvements: text};
   }
 );
