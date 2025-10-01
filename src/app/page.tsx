@@ -189,11 +189,11 @@ export default function Home() {
   const currentImageUrl = generatedImageUrls.length > 0 ? generatedImageUrls[currentImageIndex] : null;
 
   return (
-    <div className="relative min-h-screen p-2 font-body text-foreground">
+    <div className="relative h-screen flex flex-col p-2 font-body text-foreground">
 
-      <header className="text-center mb-4">
+      <header className="text-center mb-2">
         <div className="flex items-center justify-center space-x-2">
-            <svg
+             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 256 218"
                 className="h-10 w-10 text-primary"
@@ -208,97 +208,21 @@ export default function Home() {
         </p>
       </header>
 
-      <main className="grid grid-cols-1 lg:grid-cols-3 gap-4 max-w-7xl mx-auto">
-        <Card className="lg:col-span-1 h-fit glass-card rounded-2xl">
+      <main className="grid grid-cols-1 lg:grid-cols-3 gap-4 max-w-7xl mx-auto flex-grow w-full">
+        <Card className="lg:col-span-1 glass-card rounded-2xl flex flex-col">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="p-6 space-y-4">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="p-6 space-y-4 flex flex-col flex-grow">
               <h2 className="text-xl font-bold text-card-foreground">Brand Definition</h2>
               
-              <FormField
-                control={form.control}
-                name="brandName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Brand/Company Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., Hello AI" {...field} className="bg-input/50 border-border rounded-lg" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="logoFile"
-                render={({ field: { onChange } }) => (
-                  <FormItem>
-                    <FormLabel>Upload Logo Image <span className="text-primary">*</span></FormLabel>
-                    <FormControl>
-                      <div 
-                        className="mt-1 flex justify-center px-4 py-4 border-2 border-dashed border-border rounded-xl cursor-pointer hover:border-primary/80 transition bg-input/50"
-                        onClick={() => fileInputRef.current?.click()}
-                      >
-                         <div className="space-y-1 text-center">
-                            {logoPreviewUrl ? (
-                              <div className='relative w-28 h-16 mx-auto'>
-                                <Image src={logoPreviewUrl} alt="Logo Preview" fill objectFit="contain" />
-                              </div>
-                            ) : (
-                              <>
-                                <Upload className="mx-auto h-8 w-8 text-muted-foreground/50" />
-                                <div className="flex text-sm text-muted-foreground">
-                                    <span className="font-medium text-primary hover:text-primary/80">
-                                      Click/Drag to upload Logo
-                                    </span>
-                                </div>
-                                <p className="text-xs text-muted-foreground/70">PNG/JPG up to 5MB</p>
-                              </>
-                            )}
-                            <input 
-                              ref={fileInputRef} 
-                              type="file" 
-                              className="sr-only" 
-                              accept="image/png, image/jpeg, image/jpg, image/webp, image/heic"
-                              onChange={(e) => {
-                                const file = e.target.files?.[0];
-                                if (file) {
-                                    onChange(file);
-                                }
-                              }}
-                            />
-                         </div>
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="merchandise"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Merchandise Items (Comma Separated) <span className="text-primary">*</span></FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., paper bag, hat, mug" {...field} className="bg-input/50 border-border rounded-lg" />
-                    </FormControl>
-                    <p className="mt-1 text-xs text-muted-foreground/70">List 3-5 items for best result</p>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-4 flex-grow">
                 <FormField
                   control={form.control}
-                  name="mainColor"
+                  name="brandName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Main Color Theme <span className="text-primary">*</span></FormLabel>
+                      <FormLabel>Brand/Company Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g., Violet or #E2E2E2" {...field} className="bg-input/50 border-border rounded-lg"/>
+                        <Input placeholder="e.g., Hello AI" {...field} className="bg-input/50 border-border rounded-lg" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -307,26 +231,104 @@ export default function Home() {
 
                 <FormField
                   control={form.control}
-                  name="style"
-                  render={({ field }) => (
+                  name="logoFile"
+                  render={({ field: { onChange } }) => (
                     <FormItem>
-                      <FormLabel>Design Style <span className="text-primary">*</span></FormLabel>
-                      <Select onValueChange={field.onChange} value={field.value}>
-                          <FormControl>
-                            <SelectTrigger className="bg-input/50 border-border rounded-lg">
-                              <SelectValue placeholder="Select a Design style" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {STYLE_OPTIONS.map((opt) => (
-                              <SelectItem key={opt} value={opt}>{opt}</SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                      <FormLabel>Upload Logo Image <span className="text-primary">*</span></FormLabel>
+                      <FormControl>
+                        <div 
+                          className="mt-1 flex justify-center px-4 py-3 border-2 border-dashed border-border rounded-xl cursor-pointer hover:border-primary/80 transition bg-input/50"
+                          onClick={() => fileInputRef.current?.click()}
+                        >
+                           <div className="space-y-1 text-center">
+                              {logoPreviewUrl ? (
+                                <div className='relative w-28 h-12 mx-auto'>
+                                  <Image src={logoPreviewUrl} alt="Logo Preview" fill objectFit="contain" />
+                                </div>
+                              ) : (
+                                <>
+                                  <Upload className="mx-auto h-6 w-6 text-muted-foreground/50" />
+                                  <div className="flex text-xs text-muted-foreground">
+                                      <span className="font-medium text-primary hover:text-primary/80">
+                                        Click/Drag to upload Logo
+                                      </span>
+                                  </div>
+                                  <p className="text-xs text-muted-foreground/70">PNG/JPG up to 5MB</p>
+                                </>
+                              )}
+                              <input 
+                                ref={fileInputRef} 
+                                type="file" 
+                                className="sr-only" 
+                                accept="image/png, image/jpeg, image/jpg, image/webp, image/heic"
+                                onChange={(e) => {
+                                  const file = e.target.files?.[0];
+                                  if (file) {
+                                      onChange(file);
+                                  }
+                                }}
+                              />
+                           </div>
+                        </div>
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
+                <FormField
+                  control={form.control}
+                  name="merchandise"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Merchandise Items (Comma Separated) <span className="text-primary">*</span></FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g., paper bag, hat, mug" {...field} className="bg-input/50 border-border rounded-lg" />
+                      </FormControl>
+                      <p className="mt-1 text-xs text-muted-foreground/70">List 3-5 items for best result</p>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="mainColor"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Main Color Theme <span className="text-primary">*</span></FormLabel>
+                        <FormControl>
+                          <Input placeholder="e.g., Violet or #E2E2E2" {...field} className="bg-input/50 border-border rounded-lg"/>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="style"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Design Style <span className="text-primary">*</span></FormLabel>
+                        <Select onValueChange={field.onChange} value={field.value}>
+                            <FormControl>
+                              <SelectTrigger className="bg-input/50 border-border rounded-lg">
+                                <SelectValue placeholder="Select a Design style" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {STYLE_OPTIONS.map((opt) => (
+                                <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </div>
 
               <div className='!mt-6 space-y-2'>
@@ -360,8 +362,8 @@ export default function Home() {
                     </div>
                 )}
             </div>
-
-            <div className="relative border-2 border-dashed border-border rounded-2xl overflow-hidden flex-grow min-h-[300px] flex items-center justify-center bg-input/50 p-4">
+            
+            <div className="relative border-2 border-dashed border-border rounded-2xl overflow-hidden flex-grow flex items-center justify-center bg-input/50 p-4">
               {isLoading && (
                    <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-10">
                       <div className="text-center">
