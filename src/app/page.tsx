@@ -193,13 +193,13 @@ export default function Home() {
       <header className="text-center mb-4">
         <div className="flex items-center justify-center space-x-2">
             <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 256 256"
-              className="h-12 w-12 text-primary"
-              fill="currentColor"
-            >
-              <path d="M229.66,89.66l-48,48a8,8,0,0,1-11.32-11.32L188.69,108H132a60,60,0,0,0-57.23,48.27,8,8,0,0,1-15.5-4.54A76,76,0,0,1,132,92h56.69l-18.35-18.34a8,8,0,0,1,11.32-11.32l48,48A8,8,0,0,1,229.66,89.66Zm-93.1,39.81A44.13,44.13,0,0,1,124,148a44,44,0,0,1,0,88H104a8,8,0,0,0,0,16h20a60,60,0,0,0,0-120,59.4,59.4,0,0,0-36.56,11.47,8,8,0,1,0,10.22,12.34ZM104,220H48a8,8,0,0,0,0,16h56a8,8,0,0,0,0-16Zm0-32H32a8,8,0,0,0,0,16H104a8,8,0,0,0,0-16Zm-40-32h8a8,8,0,0,0,0-16h-8a8,8,0,0,0,0,16Z"/>
-            </svg>
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 256 218"
+                className="h-12 w-12 text-primary"
+                fill="currentColor"
+              >
+                <path d="M188.8,0L0,188.8V218H29.2L218,29.2V0H188.8ZM256,54.5L169.5,141H256V54.5Z" />
+              </svg>
             <span className="text-4xl font-bold"> Mocksy</span>
         </div>
         <p className="mt-1 text-muted-foreground text-sm">
