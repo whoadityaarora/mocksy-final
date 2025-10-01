@@ -244,20 +244,20 @@ export default function Home() {
 
       <header className="text-center py-2">
         <div className="flex items-center justify-center space-x-3">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="h-12 w-12 text-primary"
-        >
-          <path d="M3 3h18v18H3z" fill="hsl(var(--primary))" stroke="none" />
-          <path d="M9 9v6l3-3 3 3V9" stroke="hsl(var(--primary-foreground))" strokeWidth="2.5" />
-        </svg>
-            <span className="text-5xl font-semibold text-primary">Mocksy</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="h-12 w-12 text-primary"
+          >
+            <path d="M3 3h18v18H3z" fill="hsl(var(--primary))" stroke="none" />
+            <path d="M9 9v6l3-3 3 3V9" stroke="hsl(var(--primary-foreground))" strokeWidth="2.5" />
+          </svg>
+          <span className="text-5xl font-semibold text-primary">Mocksy</span>
         </div>
         <p className="mt-2 text-muted-foreground text-lg font-regular">
           AI-Powered Brand Identity Mockups Generator
@@ -494,7 +494,7 @@ export default function Home() {
       </main>
 
         <AlertDialog open={showWelcomeDialog} onOpenChange={setShowWelcomeDialog}>
-            <AlertDialogContent className="glass-card rounded-[10px]">
+            <AlertDialogContent className="glass-card rounded-[10px] max-w-md">
                 <AlertDialogHeader>
                     <AlertDialogTitle className="flex items-center gap-3 text-2xl font-semibold">
                         <PartyPopper className="text-primary w-8 h-8" />
@@ -564,5 +564,4 @@ export default function Home() {
       </AlertDialog>
     </div>
   );
-
-    
+}
