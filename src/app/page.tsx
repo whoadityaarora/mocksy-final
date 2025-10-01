@@ -188,11 +188,12 @@ export default function Home() {
   const currentImageUrl = generatedImageUrls.length > 0 ? generatedImageUrls[currentImageIndex] : null;
 
   return (
-    <div className="min-h-screen bg-background p-4 sm:p-8 font-body text-foreground">
+    <div className="relative min-h-screen bg-transparent p-4 sm:p-8 font-body text-foreground">
+
       <header className="text-center mb-8">
         <div className="flex items-center justify-center space-x-2">
             <Image src="/logo.png" alt="Mocksy Logo" width={48} height={48} />
-            <span className="text-4xl font-bold">Mocksy</span>
+            <span className="text-4xl font-bold"> Mocksy</span>
         </div>
         <p className="mt-2 text-muted-foreground text-sm">
           AI-Powered Brand Identity Mockups Generator
