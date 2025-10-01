@@ -110,9 +110,9 @@ export default function Home() {
   }, [carouselApi]);
 
   const onSubmit = async (values: z.infer<typeof brandFormSchema>) => {
+    setGeneratedImageUrls([]); // Clear previous results
     setIsLoading(true);
     setError(null);
-    setGeneratedImageUrls([]); // Clear previous results
     setStatusMessage('Generating cohesive brand identity mockups...');
     setCurrentImageIndex(0);
 
@@ -188,7 +188,7 @@ export default function Home() {
   const currentImageUrl = generatedImageUrls.length > 0 ? generatedImageUrls[currentImageIndex] : null;
 
   return (
-    <div className="relative min-h-screen bg-transparent p-4 sm:p-8 font-body text-foreground">
+    <div className="relative min-h-screen p-4 sm:p-8 font-body text-foreground">
 
       <header className="text-center mb-8">
         <div className="flex items-center justify-center space-x-2">
@@ -201,7 +201,7 @@ export default function Home() {
       </header>
 
       <main className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-        <Card className="lg:col-span-1 h-fit bg-card border-border rounded-2xl shadow-[0_0_20px_rgba(255,140,0,0.1)]">
+        <Card className="lg:col-span-1 h-fit glass-card rounded-2xl">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="p-6 sm:p-8 space-y-6">
               <h2 className="text-2xl font-bold text-card-foreground">Brand Definition</h2>
@@ -213,7 +213,7 @@ export default function Home() {
                   <FormItem>
                     <FormLabel>Brand/Company Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., Hello AI" {...field} className="bg-input border-border rounded-lg" />
+                      <Input placeholder="e.g., Hello AI" {...field} className="bg-input/50 border-border rounded-lg" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -228,7 +228,7 @@ export default function Home() {
                     <FormLabel>Upload Logo Image <span className="text-primary">*</span></FormLabel>
                     <FormControl>
                       <div 
-                        className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed border-border rounded-xl cursor-pointer hover:border-primary/80 transition bg-input"
+                        className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed border-border rounded-xl cursor-pointer hover:border-primary/80 transition bg-input/50"
                         onClick={() => fileInputRef.current?.click()}
                       >
                          <div className="space-y-1 text-center">
@@ -274,7 +274,7 @@ export default function Home() {
                   <FormItem>
                     <FormLabel>Merchandise Items (Comma Separated) <span className="text-primary">*</span></FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., paper bag, hat, mug" {...field} className="bg-input border-border rounded-lg" />
+                      <Input placeholder="e.g., paper bag, hat, mug" {...field} className="bg-input/50 border-border rounded-lg" />
                     </FormControl>
                     <p className="mt-1 text-xs text-muted-foreground/70">List 3-5 items for best result</p>
                     <FormMessage />
@@ -290,7 +290,7 @@ export default function Home() {
                     <FormItem>
                       <FormLabel>Main Color Theme <span className="text-primary">*</span></FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g., Violet or #E2E2E2" {...field} className="bg-input border-border rounded-lg"/>
+                        <Input placeholder="e.g., Violet or #E2E2E2" {...field} className="bg-input/50 border-border rounded-lg"/>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -305,7 +305,7 @@ export default function Home() {
                       <FormLabel>Design Style <span className="text-primary">*</span></FormLabel>
                       <Select onValueChange={field.onChange} value={field.value}>
                           <FormControl>
-                            <SelectTrigger className="bg-input border-border rounded-lg">
+                            <SelectTrigger className="bg-input/50 border-border rounded-lg">
                               <SelectValue placeholder="Select a Design style" />
                             </SelectTrigger>
                           </FormControl>
@@ -335,7 +335,7 @@ export default function Home() {
           </Form>
         </Card>
 
-        <Card className="lg:col-span-2 p-6 sm:p-8 flex flex-col bg-card border-border rounded-2xl shadow-[0_0_20px_rgba(255,140,0,0.1)]">
+        <Card className="lg:col-span-2 p-6 sm:p-8 flex flex-col glass-card rounded-2xl">
            <h2 className="text-2xl font-bold text-card-foreground mb-4">Generated Mockups</h2>
           
             <div className="min-h-12 mb-4">
@@ -347,13 +347,13 @@ export default function Home() {
                     </Alert>
                 )}
                 {!error && statusMessage && (
-                    <div className="px-4 py-3 rounded-lg text-sm bg-primary/10 text-primary">
+                    <div className="px-4 py-3 rounded-lg text-sm bg-primary/20 text-primary-foreground">
                         <p>{statusMessage}</p>
                     </div>
                 )}
             </div>
 
-            <div className="relative border-2 border-dashed border-border rounded-2xl overflow-hidden flex-grow min-h-[400px] flex items-center justify-center bg-input p-4">
+            <div className="relative border-2 border-dashed border-border rounded-2xl overflow-hidden flex-grow min-h-[400px] flex items-center justify-center bg-input/50 p-4">
               {isLoading && (
                    <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-10">
                       <div className="text-center">
@@ -391,7 +391,7 @@ export default function Home() {
                         <CarouselItem key={index} className="basis-1/4 pl-2">
                           <div className="p-1">
                             <Card 
-                              className={`overflow-hidden cursor-pointer transition-all bg-input aspect-square ${index === currentImageIndex ? 'border-primary border-2' : 'border-border'}`}
+                              className={`overflow-hidden cursor-pointer transition-all bg-input/50 aspect-square ${index === currentImageIndex ? 'border-primary border-2' : 'border-border'}`}
                               onClick={() => carouselApi?.scrollTo(index)}
                             >
                               <div className="relative aspect-square">
@@ -407,8 +407,8 @@ export default function Home() {
                         </CarouselItem>
                       ))}
                     </CarouselContent>
-                    <CarouselPrevious className="bg-card border-border hover:bg-input"/>
-                    <CarouselNext className="bg-card border-border hover:bg-input"/>
+                    <CarouselPrevious className="bg-card/50 border-border hover:bg-input/50"/>
+                    <CarouselNext className="bg-card/50 border-border hover:bg-input/50"/>
                   </Carousel>
               </div>
             )}
@@ -419,7 +419,7 @@ export default function Home() {
                         {isImproving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
                         <span>Improve</span>
                     </Button>
-                    <Button onClick={downloadImage} variant="outline" className="shadow-lg transition-transform transform hover:scale-105 active:scale-95 bg-card border-border hover:bg-input hover:text-foreground rounded-lg px-6 py-5 font-semibold">
+                    <Button onClick={downloadImage} variant="outline" className="shadow-lg transition-transform transform hover:scale-105 active:scale-95 bg-card/50 border-border hover:bg-input/50 hover:text-foreground rounded-lg px-6 py-5 font-semibold">
                         <Download className="mr-2 h-4 w-4" />
                         <span>Download File</span>
                     </Button>
@@ -429,7 +429,7 @@ export default function Home() {
       </main>
 
       <AlertDialog open={!!improvements} onOpenChange={(open) => !open && setImprovements(null)}>
-        <AlertDialogContent>
+        <AlertDialogContent className="glass-card">
           <AlertDialogHeader>
             <AlertDialogTitle>Brand Improvement Suggestions</AlertDialogTitle>
             <AlertDialogDescription>
@@ -449,5 +449,3 @@ export default function Home() {
     </div>
   );
 }
-
-    
