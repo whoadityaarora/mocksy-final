@@ -25,7 +25,8 @@ import { Textarea } from '@/components/ui/textarea';
 
 
 const STYLE_OPTIONS = ['Modern', 'Minimalist', 'Vintage', 'Urban', 'Futuristic', 'Eco-Natural', 'Sporty', 'Luxury', 'Geometric'];
-const MAX_GENERATIONS = 5;
+const MAX_INITIAL_GENERATIONS = 5;
+const MAX_IMPROVEMENT_GENERATIONS = 5;
 
 export default function Home() {
   const [userId, setUserId] = useState<string | null>(null);
@@ -38,10 +39,12 @@ export default function Home() {
   const [logoPreviewUrl, setLogoPreviewUrl] = useState<string | null>(null);
   const [carouselApi, setCarouselApi] = useState<CarouselApi>();
   const [showLimitDialog, setShowLimitDialog] = useState(false);
+  const [limitMessage, setLimitMessage] = useState('');
   const [showImproveDialog, setShowImproveDialog] = useState(false);
   const [critique, setCritique] = useState('');
   const [showWelcomeDialog, setShowWelcomeDialog] = useState(false);
-
+  const [initialGenerationsCount, setInitialGenerationsCount] = useState(0);
+  const [improvementGenerationsCount, setImprovementGenerationsCount] = useState(0);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -116,7 +119,8 @@ export default function Home() {
   };
 
   const onSubmit = async (values: z.infer<typeof brandFormSchema>) => {
-    if (generatedImageUrls.length >= MAX_GENERATIONS) {
+    if (initialGenerationsCount >= MAX_INITIAL_GENERATIONS) {
+      setLimitMessage(`You have reached the limit of ${MAX_INITIAL_GENERATIONS} initial mockup generations.`);
       setShowLimitDialog(true);
       return;
     }
@@ -136,6 +140,7 @@ export default function Home() {
       
       if (result.imageUrl) {
         setGeneratedImageUrls(prev => [result.imageUrl]);
+        setInitialGenerationsCount(prev => prev + 1);
         setStatusMessage('Brand identity successfully generated! Review and download your high-resolution mockups.');
         setCurrentImageIndex(0);
         
@@ -165,10 +170,12 @@ export default function Home() {
   };
   
   const onImprove = async () => {
-    if (generatedImageUrls.length >= MAX_GENERATIONS) {
+    if (improvementGenerationsCount >= MAX_IMPROVEMENT_GENERATIONS) {
+      setLimitMessage(`You have reached the limit of ${MAX_IMPROVEMENT_GENERATIONS} improvement generations.`);
       setShowLimitDialog(true);
       return;
     }
+
     const currentImageUrl = generatedImageUrls[currentImageIndex];
     if (!currentImageUrl || !logoFile) {
         setError("Cannot improve without a generated image and a logo.");
@@ -203,6 +210,7 @@ export default function Home() {
         if (result.imageUrl) {
             const newImageIndex = generatedImageUrls.length;
             setGeneratedImageUrls(prev => [...prev, result.imageUrl]);
+            setImprovementGenerationsCount(prev => prev + 1);
             setStatusMessage('Successfully generated an improved mockup!');
             setCritique('');
             
@@ -235,8 +243,8 @@ export default function Home() {
     }
   }, [generatedImageUrls, currentImageIndex, form]);
   
-  const isGenerateDisabled = isLoading || !logoFile || isImproving || generatedImageUrls.length >= MAX_GENERATIONS; 
-  const isImproveDisabled = isLoading || isImproving || generatedImageUrls.length === 0 || generatedImageUrls.length >= MAX_GENERATIONS;
+  const isGenerateDisabled = isLoading || !logoFile || isImproving || initialGenerationsCount >= MAX_INITIAL_GENERATIONS; 
+  const isImproveDisabled = isLoading || isImproving || generatedImageUrls.length === 0 || improvementGenerationsCount >= MAX_IMPROVEMENT_GENERATIONS;
   const currentImageUrl = generatedImageUrls.length > 0 ? generatedImageUrls[currentImageIndex] : null;
 
   return (
@@ -385,7 +393,7 @@ export default function Home() {
                 />
               </div>
 
-              <div className='!mt-auto pt-4'>
+              <div className='!mt-auto pt-4 text-center'>
                 <Button type="submit" disabled={isGenerateDisabled} className="w-full text-base font-medium py-5 transition-transform transform hover:scale-[1.02] active:scale-[0.98] rounded-lg bg-primary text-primary-foreground">
                   {isLoading ? (
                     <Loader2 className="mr-2 h-5 w-5 animate-spin" />
@@ -394,6 +402,7 @@ export default function Home() {
                   )}
                   <span>{isLoading ? 'Generating...' : 'Generate Mockups'}</span>
                 </Button>
+                <p className="text-xs text-muted-foreground mt-2">{initialGenerationsCount}/{MAX_INITIAL_GENERATIONS} generations used</p>
               </div>
             </form>
           </Form>
@@ -478,12 +487,15 @@ export default function Home() {
                       </Carousel>
                   </div>
                   
-                  <div className="flex items-center space-x-2">
-                    <Button onClick={handleImproveClick} disabled={isImproveDisabled} className="font-medium rounded-[6px]">
-                        <Wand2 className="mr-2 h-5 w-5" />
-                        Improve
-                    </Button>
-                    <Button onClick={downloadImage} variant="outline" className="font-medium rounded-[6px] bg-card/50 border-border hover:bg-input/50 hover:text-foreground">
+                  <div className="flex items-center space-x-2 text-center">
+                    <div>
+                        <Button onClick={handleImproveClick} disabled={isImproveDisabled} className="font-medium rounded-[6px]">
+                            <Wand2 className="mr-2 h-5 w-5" />
+                            Improve
+                        </Button>
+                        <p className="text-xs text-muted-foreground mt-2">{improvementGenerationsCount}/{MAX_IMPROVEMENT_GENERATIONS} improvements used</p>
+                    </div>
+                    <Button onClick={downloadImage} variant="outline" className="font-medium rounded-[6px] bg-card/50 border-border hover:bg-input/50 hover:text-foreground self-start">
                         <Download className="mr-2 h-5 w-5" />
                         Download
                     </Button>
@@ -521,7 +533,7 @@ export default function Home() {
                 <AlertDialogHeader>
                 <AlertDialogTitle>Generation Limit Reached</AlertDialogTitle>
                 <AlertDialogDescription>
-                    This is an experimental project, and for now, you can generate up to {MAX_GENERATIONS} mockups (including improvements). Thank you for trying out Mocksy!
+                    {limitMessage} This is an experimental project, and for now, you can generate up to {MAX_INITIAL_GENERATIONS} mockups and {MAX_IMPROVEMENT_GENERATIONS} improvements. Thank you for trying out Mocksy!
                 </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
