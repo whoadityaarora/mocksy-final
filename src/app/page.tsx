@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
@@ -226,13 +225,13 @@ export default function Home() {
 
       <header className="text-center py-2">
         <div className="flex items-center justify-center space-x-2">
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 256 218"
-                className="h-10 w-10 text-primary"
-                fill="currentColor"
+           <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 100 100"
+              className="h-10 w-10 text-primary"
+              fill="currentColor"
             >
-                <path d="M128 0L0 74.24V218L128 143.76L256 218V74.24L128 0ZM32.4 90.64L128 38.08L223.6 90.64L128 143.2L32.4 90.64Z" />
+              <path d="M50 0L50 25L12.5 25L12.5 37.5L50 37.5L50 62.5L12.5 62.5L12.5 75L50 75L50 100L87.5 100L87.5 0L50 0Z" />
             </svg>
             <span className="text-3xl font-semibold"> Mocksy</span>
         </div>
@@ -244,8 +243,8 @@ export default function Home() {
       <main className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto flex-grow w-full pb-2">
         <Card className="lg:col-span-1 glass-card rounded-2xl flex flex-col">
            <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="p-6 space-y-4 flex flex-col flex-grow">
-              <h2 className="text-xl font-semibold text-card-foreground">Brand Definition</h2>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="p-6 flex flex-col flex-grow">
+              <h2 className="text-xl font-semibold text-card-foreground mb-4">Brand Definition</h2>
               
               <div className="space-y-4 flex-grow">
                 <FormField
@@ -362,7 +361,7 @@ export default function Home() {
                 />
               </div>
 
-              <div className='!mt-auto space-y-2'>
+              <div className='!mt-auto pt-4'>
                 <Button type="submit" disabled={isGenerateDisabled} className="w-full text-base font-medium py-5 transition-transform transform hover:scale-[1.02] active:scale-[0.98] rounded-lg bg-primary text-primary-foreground">
                   {isLoading ? (
                     <Loader2 className="mr-2 h-5 w-5 animate-spin" />
@@ -487,3 +486,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
