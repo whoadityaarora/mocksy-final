@@ -248,7 +248,7 @@ export default function Home() {
   const currentImageUrl = generatedImageUrls.length > 0 ? generatedImageUrls[currentImageIndex] : null;
 
   return (
-    <div className="relative h-screen flex flex-col px-8 pb-4 sm:px-6 sm:pb-6 md:px-8 md:pb-8 font-body text-foreground">
+    <div className="relative min-h-screen flex flex-col px-8 pb-4 sm:px-6 sm:pb-6 md:px-8 md:pb-8 font-body text-foreground">
 
       <header className="text-center py-2">
         <div className="flex items-center justify-center space-x-3">
@@ -505,6 +505,20 @@ export default function Home() {
         </Card>
       </main>
 
+        <footer className="text-center text-sm text-muted-foreground py-4">
+          <p>
+            Created by{' '}
+            <a
+              href="https://www.linkedin.com/in/adityaarora20/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              @AdityaArora
+            </a>
+          </p>
+        </footer>
+
         <AlertDialog open={showWelcomeDialog} onOpenChange={setShowWelcomeDialog}>
             <AlertDialogContent className="glass-card rounded-[10px] max-w-md">
                 <AlertDialogHeader>
@@ -576,5 +590,6 @@ export default function Home() {
       </AlertDialog>
     </div>
   );
+}
 
     
