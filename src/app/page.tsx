@@ -386,7 +386,7 @@ export default function Home() {
                 )}
             </div>
             
-            <div className="relative border-2 border-dashed border-border rounded-2xl overflow-hidden flex-grow flex items-center justify-center bg-input/50 p-4">
+            <div className="relative border-2 border-dashed border-border rounded-2xl overflow-hidden flex-grow flex items-center justify-center bg-input/50">
               {(isLoading || isImproving) && (
                    <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-10">
                       <div className="text-center">
@@ -476,3 +476,6 @@ export default function Home() {
   );
 }
 
+
+
+    
