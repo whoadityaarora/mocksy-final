@@ -244,12 +244,28 @@ export default function Home() {
         <div className="flex items-center justify-center space-x-3">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 256 256"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
           className="h-14 w-14 text-primary"
-          fill="currentColor"
         >
-            <path d="M168,40a24,24,0,1,1-24,24,24,24,0,0,1,24-24Z" opacity="0.1"></path>
-            <path d="M232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128ZM168,64a24,24,0,1,0-24-24,24,24,0,0,0,24,24Zm-86.35,93.65a40,40,0,0,0,56.7,0l42.34,42.34a8,8,0,0,1-11.32,11.32L127.05,179a8,8,0,0,1-11.31,0L81.66,211.31a8,8,0,0,1-11.32-11.32Z"></path>
+          <path d="M12 2L2 7l10 5 10-5-10-5z" fill="currentColor" fillOpacity="0.2"/>
+          <path d="M2 17l10 5 10-5" stroke="currentColor"/>
+          <path d="M2 12l10 5 10-5" stroke="currentColor"/>
+           <path
+            d="M17.5 9.5 22 12l-10 5-10-5 4.5-2.5"
+            fill="currentColor"
+            stroke="none"
+          />
+          <path
+            d="M22 2.5 12 8l-10-5.5L12 2l10 .5z"
+            stroke="currentColor"
+            fill="currentColor"
+            transform="translate(0, -0.5)"
+          />
         </svg>
 
             <span className="text-5xl font-semibold text-primary">Mocksy</span>
@@ -537,6 +553,8 @@ export default function Home() {
     </div>
   );
 }
+
+    
 
     
 
