@@ -248,7 +248,7 @@ export default function Home() {
   const currentImageUrl = generatedImageUrls.length > 0 ? generatedImageUrls[currentImageIndex] : null;
 
   return (
-    <div className="relative min-h-screen flex flex-col px-8 pb-4 sm:px-6 sm:pb-6 md:px-8 md:pb-8 font-body text-foreground">
+    <div className="relative min-h-screen h-screen overflow-hidden flex flex-col px-4 sm:px-6 md:px-8 font-body text-foreground">
 
       <header className="text-center py-2">
         <div className="flex items-center justify-center space-x-3">
@@ -267,26 +267,26 @@ export default function Home() {
           </svg>
           <span className="text-5xl font-semibold text-primary">Mocksy</span>
         </div>
-        <p className="mt-2 text-muted-foreground text-lg font-regular">
+        <p className="mt-1 text-muted-foreground text-base font-regular">
           AI-Powered Brand Identity Mockups Generator
         </p>
       </header>
 
-      <main className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto flex-grow w-full pb-2">
+      <main className="grid grid-cols-1 lg:grid-cols-3 gap-4 max-w-7xl mx-auto flex-grow w-full pb-2">
         <Card className="lg:col-span-1 glass-card rounded-2xl flex flex-col">
            <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="p-6 flex flex-col flex-grow">
-              <h2 className="text-xl font-semibold text-card-foreground mb-4">Brand Definition</h2>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="p-4 flex flex-col flex-grow">
+              <h2 className="text-lg font-semibold text-card-foreground mb-3">Brand Definition</h2>
               
-              <div className="space-y-4 flex-grow">
+              <div className="space-y-3 flex-grow">
                 <FormField
                   control={form.control}
                   name="brandName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="font-medium">Brand/Company Name</FormLabel>
+                      <FormLabel className="font-medium text-sm">Brand/Company Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g., Hello AI" {...field} className="bg-input/50 border-border rounded-lg" />
+                        <Input placeholder="e.g., Hello AI" {...field} className="h-10 bg-input/50 border-border rounded-lg" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -298,20 +298,20 @@ export default function Home() {
                   name="logoFile"
                   render={({ field: { onChange } }) => (
                     <FormItem>
-                      <FormLabel className="font-medium">Upload Logo Image <span className="text-primary">*</span></FormLabel>
+                      <FormLabel className="font-medium text-sm">Upload Logo Image <span className="text-primary">*</span></FormLabel>
                       <FormControl>
                         <div 
-                          className="mt-1 flex justify-center px-4 py-3 border-2 border-dashed border-border rounded-xl cursor-pointer hover:border-primary/80 transition bg-input/50"
+                          className="mt-1 flex justify-center px-4 py-2 border-2 border-dashed border-border rounded-xl cursor-pointer hover:border-primary/80 transition bg-input/50"
                           onClick={() => fileInputRef.current?.click()}
                         >
                            <div className="space-y-1 text-center">
                               {logoPreviewUrl ? (
-                                <div className='relative w-28 h-12 mx-auto'>
+                                <div className='relative w-24 h-10 mx-auto'>
                                   <Image src={logoPreviewUrl} alt="Logo Preview" fill objectFit="contain" />
                                 </div>
                               ) : (
                                 <>
-                                  <Upload className="mx-auto h-6 w-6 text-muted-foreground/50" />
+                                  <Upload className="mx-auto h-5 w-5 text-muted-foreground/50" />
                                   <div className="flex text-xs text-muted-foreground">
                                       <span className="font-medium text-primary hover:text-primary/80">
                                         Click/Drag to upload Logo
@@ -345,9 +345,9 @@ export default function Home() {
                   name="merchandise"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="font-medium">Merchandise Items (Comma Separated) <span className="text-primary">*</span></FormLabel>
+                      <FormLabel className="font-medium text-sm">Merchandise Items (Comma Separated) <span className="text-primary">*</span></FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g., paper bag, hat, mug" {...field} className="bg-input/50 border-border rounded-lg" />
+                        <Input placeholder="e.g., paper bag, hat, mug" {...field} className="h-10 bg-input/50 border-border rounded-lg" />
                       </FormControl>
                       <p className="mt-1 text-xs text-muted-foreground/70 font-regular">List 3-5 items for best result</p>
                       <FormMessage />
@@ -360,9 +360,9 @@ export default function Home() {
                   name="mainColor"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="font-medium">Main Color Theme <span className="text-primary">*</span></FormLabel>
+                      <FormLabel className="font-medium text-sm">Main Color Theme <span className="text-primary">*</span></FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g., Violet or #E2E2E2" {...field} className="bg-input/50 border-border rounded-lg"/>
+                        <Input placeholder="e.g., Violet or #E2E2E2" {...field} className="h-10 bg-input/50 border-border rounded-lg"/>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -374,10 +374,10 @@ export default function Home() {
                   name="style"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="font-medium">Design Style <span className="text-primary">*</span></FormLabel>
+                      <FormLabel className="font-medium text-sm">Design Style <span className="text-primary">*</span></FormLabel>
                       <Select onValueChange={field.onChange} value={field.value}>
                           <FormControl>
-                            <SelectTrigger className="bg-input/50 border-border rounded-lg">
+                            <SelectTrigger className="h-10 bg-input/50 border-border rounded-lg">
                               <SelectValue placeholder="Select a Design style" />
                             </SelectTrigger>
                           </FormControl>
@@ -393,7 +393,7 @@ export default function Home() {
                 />
               </div>
 
-              <div className='!mt-auto pt-4 text-center'>
+              <div className='!mt-auto pt-3 text-center'>
                 <Button type="submit" disabled={isGenerateDisabled} className="w-full text-base font-medium py-5 transition-transform transform hover:scale-[1.02] active:scale-[0.98] rounded-lg bg-primary text-primary-foreground">
                   {isLoading ? (
                     <Loader2 className="mr-2 h-5 w-5 animate-spin" />
@@ -402,16 +402,16 @@ export default function Home() {
                   )}
                   <span>{isLoading ? 'Generating...' : 'Generate Mockups'}</span>
                 </Button>
-                <p className="text-xs text-muted-foreground mt-2">{initialGenerationsCount}/{MAX_INITIAL_GENERATIONS} generations used</p>
+                <p className="text-xs text-muted-foreground mt-1.5">{initialGenerationsCount}/{MAX_INITIAL_GENERATIONS} generations used</p>
               </div>
             </form>
           </Form>
         </Card>
 
         <Card className="lg:col-span-2 p-4 flex flex-col glass-card rounded-2xl">
-           <h2 className="text-xl font-semibold text-card-foreground mb-4">Generated Mockups</h2>
+           <h2 className="text-lg font-semibold text-card-foreground mb-2">Generated Mockups</h2>
           
-            <div className="min-h-12 mb-4">
+            <div className="min-h-10 mb-2">
                 {error && (
                     <Alert variant="destructive">
                         <AlertCircle className="h-4 w-4" />
@@ -420,7 +420,7 @@ export default function Home() {
                     </Alert>
                 )}
                 {!error && statusMessage && (
-                    <div className="px-4 py-3 rounded-lg text-sm bg-primary/20 text-primary-foreground font-medium">
+                    <div className="px-4 py-2 rounded-lg text-sm bg-primary/20 text-primary-foreground font-medium">
                         <p>{statusMessage}</p>
                     </div>
                 )}
@@ -460,13 +460,13 @@ export default function Home() {
             </div>
             
             {generatedImageUrls.length > 0 && !isLoading && (
-              <div className="flex items-center justify-between space-x-4 mt-4">
+              <div className="flex items-center justify-between space-x-2 mt-2">
                   <div className="relative flex-grow max-w-lg">
                       <Carousel setApi={setCarouselApi} opts={{align: "start"}} className="w-full">
-                          <CarouselContent className="-ml-2">
+                          <CarouselContent className="-ml-1">
                           {generatedImageUrls.map((url, index) => (
-                              <CarouselItem key={index} className="basis-1/4 md:basis-1/5 pl-2">
-                              <div className="p-1">
+                              <CarouselItem key={index} className="basis-1/5 md:basis-1/6 pl-1">
+                              <div className="p-0.5">
                                   <Card 
                                   className={`overflow-hidden cursor-pointer transition-all bg-input/50 aspect-square rounded-[6px] ${index === currentImageIndex ? 'border-primary border-2' : 'border-border'}`}
                                   onClick={() => handleThumbnailClick(index)}
@@ -493,7 +493,7 @@ export default function Home() {
                             <Wand2 className="mr-2 h-5 w-5" />
                             Improve
                         </Button>
-                        <p className="text-xs text-muted-foreground mt-2">{improvementGenerationsCount}/{MAX_IMPROVEMENT_GENERATIONS} improvements used</p>
+                        <p className="text-xs text-muted-foreground mt-1">{improvementGenerationsCount}/{MAX_IMPROVEMENT_GENERATIONS} used</p>
                     </div>
                     <Button onClick={downloadImage} variant="outline" className="font-medium rounded-[6px] bg-card/50 border-border hover:bg-input/50 hover:text-foreground self-start">
                         <Download className="mr-2 h-5 w-5" />
@@ -505,7 +505,7 @@ export default function Home() {
         </Card>
       </main>
 
-        <footer className="text-center text-sm text-muted-foreground py-4">
+        <footer className="text-center text-xs text-muted-foreground py-2">
           <p>
             Created by{' '}
             <a
@@ -591,5 +591,3 @@ export default function Home() {
     </div>
   );
 }
-
-    
