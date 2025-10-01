@@ -221,21 +221,21 @@ export default function Home() {
   const currentImageUrl = generatedImageUrls.length > 0 ? generatedImageUrls[currentImageIndex] : null;
 
   return (
-    <div className="relative h-screen flex flex-col p-4 sm:p-6 md:p-12 font-body text-foreground">
+    <div className="relative h-screen flex flex-col p-4 sm:p-6 md:p-8 font-body text-foreground">
 
       <header className="text-center py-2">
         <div className="flex items-center justify-center space-x-2">
            <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 100 100"
-              className="h-10 w-10 text-primary"
+              className="h-12 w-12 text-primary"
               fill="currentColor"
             >
               <path d="M50 0L50 25L12.5 25L12.5 37.5L50 37.5L50 62.5L12.5 62.5L12.5 75L50 75L50 100L87.5 100L87.5 0L50 0Z" />
             </svg>
-            <span className="text-3xl font-semibold"> Mocksy</span>
+            <span className="text-4xl font-semibold"> Mocksy</span>
         </div>
-        <p className="mt-1 text-muted-foreground text-sm font-regular">
+        <p className="mt-1 text-muted-foreground text-base font-regular">
           AI-Powered Brand Identity Mockups Generator
         </p>
       </header>
@@ -487,4 +487,5 @@ export default function Home() {
   );
 }
 
+    
     
