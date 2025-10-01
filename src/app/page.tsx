@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
@@ -195,12 +196,12 @@ export default function Home() {
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 256 218"
-                className="h-12 w-12 text-primary"
+                className="h-10 w-10 text-primary"
                 fill="currentColor"
               >
                 <path d="M188.8,0L0,188.8V218H29.2L218,29.2V0H188.8ZM256,54.5L169.5,141H256V54.5Z" />
               </svg>
-            <span className="text-4xl font-bold"> Mocksy</span>
+            <span className="text-3xl font-bold"> Mocksy</span>
         </div>
         <p className="mt-1 text-muted-foreground text-sm">
           AI-Powered Brand Identity Mockups Generator
@@ -211,7 +212,7 @@ export default function Home() {
         <Card className="lg:col-span-1 h-fit glass-card rounded-2xl">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="p-6 space-y-4">
-              <h2 className="text-2xl font-bold text-card-foreground">Brand Definition</h2>
+              <h2 className="text-xl font-bold text-card-foreground">Brand Definition</h2>
               
               <FormField
                 control={form.control}
@@ -343,7 +344,7 @@ export default function Home() {
         </Card>
 
         <Card className="lg:col-span-2 p-4 flex flex-col glass-card rounded-2xl">
-           <h2 className="text-2xl font-bold text-card-foreground mb-4">Generated Mockups</h2>
+           <h2 className="text-xl font-bold text-card-foreground mb-4">Generated Mockups</h2>
           
             <div className="min-h-12 mb-4">
                 {error && (
