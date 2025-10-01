@@ -79,12 +79,13 @@
     @apply border-border;
   }
   body {
+    background: radial-gradient(ellipse 80% 50% at 50% -20%, hsl(var(--primary) / 0.3), transparent);
     @apply bg-background text-foreground;
   }
 }
 
 @layer utilities {
   .glass-card {
-    @apply bg-card/10 backdrop-blur-xl border border-white/10 shadow-lg;
+    @apply bg-card/60 backdrop-blur-xl border border-white/10 shadow-lg;
   }
 }
