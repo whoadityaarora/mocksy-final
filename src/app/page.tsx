@@ -9,7 +9,7 @@ import type { z } from 'zod';
 import { signInAnonymously, type AuthError } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 
-import { generateIdentityAction, regenerateIdentityAction, getUserUsage } from '@/app/actions';
+import { generateIdentityAction, regenerateIdentityAction } from '@/app/actions';
 import { brandFormSchema } from '@/lib/schema';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -17,6 +17,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { AlertDialog, AlertDialogAction, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from "@/components/ui/carousel";
 import { Download, Upload, Zap, Sparkles, AlertCircle, Loader2, Wand2 } from 'lucide-react';
@@ -28,7 +29,6 @@ const MAX_GENERATIONS = 5;
 
 export default function Home() {
   const [userId, setUserId] = useState<string | null>(null);
-  const [usageCount, setUsageCount] = useState(0);
   const [generatedImageUrls, setGeneratedImageUrls] = useState<string[]>([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -37,6 +37,7 @@ export default function Home() {
   const [statusMessage, setStatusMessage] = useState('Upload your logo and define the brand identity unputs.');
   const [logoPreviewUrl, setLogoPreviewUrl] = useState<string | null>(null);
   const [carouselApi, setCarouselApi] = useState<CarouselApi>();
+  const [showLimitDialog, setShowLimitDialog] = useState(false);
 
   
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -53,15 +54,6 @@ export default function Home() {
   });
 
   const logoFile = form.watch('logoFile');
-  
-  // const fetchUsage = useCallback(async (id: string) => {
-  //   const count = await getUserUsage(id);
-  //   setUsageCount(count);
-  //   if (count >= MAX_GENERATIONS) {
-  //     setStatusMessage(`You've reached your limit of ${MAX_GENERATIONS} mockups.`);
-  //   }
-  // }, []);
-
 
   useEffect(() => {
     if (logoFile) {
@@ -81,7 +73,6 @@ export default function Home() {
         const userCredential = await signInAnonymously(auth);
         const uid = userCredential.user.uid;
         setUserId(uid);
-        // fetchUsage(uid);
       } catch (authError) {
         const firebaseError = authError as AuthError;
         if (firebaseError.code === 'auth/operation-not-allowed' || firebaseError.code === 'auth/configuration-not-found') {
@@ -93,7 +84,6 @@ export default function Home() {
         }
         const fallbackId = crypto.randomUUID();
         setUserId(fallbackId);
-        // fetchUsage(fallbackId);
       }
     };
     signIn();
@@ -122,6 +112,11 @@ export default function Home() {
   };
 
   const onSubmit = async (values: z.infer<typeof brandFormSchema>) => {
+    if (generatedImageUrls.length >= MAX_GENERATIONS) {
+      setShowLimitDialog(true);
+      return;
+    }
+
     setGeneratedImageUrls([]); // Clear previous results
     setIsLoading(true);
     setError(null);
@@ -143,8 +138,6 @@ export default function Home() {
       } else {
         throw new Error("The AI model did not return an image.");
       }
-      
-      // if(userId) fetchUsage(userId);
 
     } catch (e: any) {
       const errorMessage = e.message || "An unexpected error occurred.";
@@ -156,6 +149,10 @@ export default function Home() {
   };
 
   const onImprove = async () => {
+    if (generatedImageUrls.length >= MAX_GENERATIONS) {
+      setShowLimitDialog(true);
+      return;
+    }
     const currentImageUrl = generatedImageUrls[currentImageIndex];
     if (!currentImageUrl || !logoFile) {
         setError("Cannot improve without a generated image and a logo.");
@@ -172,7 +169,6 @@ export default function Home() {
         const buffer = Buffer.from(arrayBuffer);
         const logoDataUri = `data:${logoFile.type};base64,${buffer.toString("base64")}`;
 
-
         const result = await regenerateIdentityAction({
             brandName: values.brandName ?? 'brand',
             mainColor: values.mainColor,
@@ -180,6 +176,7 @@ export default function Home() {
             merchandise: values.merchandise,
             previousImageUrl: currentImageUrl,
             logoDataUri: logoDataUri,
+            critique: "Improve the previous image based on these details"
         }, userId);
 
         if (result.error) {
@@ -191,16 +188,13 @@ export default function Home() {
             setGeneratedImageUrls(prev => [...prev, result.imageUrl]);
             setStatusMessage('Successfully generated an improved mockup!');
             
-            // Wait for the state to update and then scroll
             setTimeout(() => {
                 carouselApi?.scrollTo(newImageIndex);
                 setCurrentImageIndex(newImageIndex);
-            }, 0);
+            }, 100);
         } else {
             throw new Error("The AI model did not return an improved image.");
         }
-        
-        // if(userId) fetchUsage(userId);
 
     } catch (e: any) {
        const errorMessage = e.message || "An unexpected error occurred.";
@@ -228,17 +222,18 @@ export default function Home() {
   const currentImageUrl = generatedImageUrls.length > 0 ? generatedImageUrls[currentImageIndex] : null;
 
   return (
-    <div className="relative h-screen flex flex-col p-2 px-8 font-body text-foreground">
+    <div className="relative h-screen flex flex-col p-4 sm:p-6 md:p-8 font-body text-foreground">
 
       <header className="text-center py-2">
         <div className="flex items-center justify-center space-x-2">
            <svg
               xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 100 100"
+              viewBox="0 0 256 218"
               className="h-10 w-10 text-primary"
               fill="currentColor"
             >
-              <path d="M10 90 L10 10 L30 10 L30 50 L50 30 L70 50 L70 10 L90 10 L90 90 L70 90 L70 60 L50 80 L30 60 L30 90 Z" />
+              <path d="M128 0L0 74.24V218h256V74.24L128 0zM31.43 85.49l96.57-55.69 96.57 55.69v55.69l-96.57 55.69-96.57-55.69V85.49z" />
+              <path d="M73.53 111.45l54.47-31.42 54.47 31.42v31.42l-54.47 31.42-54.47-31.42v-31.42z" />
             </svg>
             <span className="text-3xl font-semibold"> Mocksy</span>
         </div>
@@ -415,10 +410,11 @@ export default function Home() {
                   </div>
               )}
               {currentImageUrl && !isLoading && !isImproving ? (
-                  <img
+                  <Image
                       src={currentImageUrl}
                       alt="Generated Brand Identity Mockup"
-                      className="max-w-full max-h-full object-contain rounded-lg"
+                      fill
+                      className="object-contain rounded-lg"
                   />
               ) : !isLoading && !isImproving && (
                   <div className="text-center text-muted-foreground p-10">
@@ -455,16 +451,16 @@ export default function Home() {
                               </CarouselItem>
                           ))}
                           </CarouselContent>
-                          <CarouselPrevious className="bg-card/50 border-border hover:bg-input/50 -left-10"/>
-                          <CarouselNext className="bg-card/50 border-border hover:bg-input/50 -right-10"/>
+                          <CarouselPrevious className="bg-card/50 border-border hover:bg-input/50 left-2"/>
+                          <CarouselNext className="bg-card/50 border-border hover:bg-input/50 right-2"/>
                       </Carousel>
                   </div>
                   
-                  <Button onClick={onImprove} disabled={isImproveDisabled} className="shadow-lg transition-transform transform hover:scale-105 active:scale-95 bg-primary text-primary-foreground rounded-lg px-6 py-5 font-medium">
+                  <Button onClick={onImprove} disabled={isImproveDisabled} className="shadow-lg transition-transform transform hover:scale-105 active:scale-95 rounded-full px-6 py-5 font-medium">
                       {isImproving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
                       <span>Improve</span>
                   </Button>
-                  <Button onClick={downloadImage} variant="outline" className="shadow-lg transition-transform transform hover:scale-105 active:scale-95 bg-card/50 border-border hover:bg-input/50 hover:text-foreground rounded-lg px-6 py-5 font-medium">
+                  <Button onClick={downloadImage} variant="outline" className="shadow-lg transition-transform transform hover:scale-105 active:scale-95 bg-card/50 border-border hover:bg-input/50 hover:text-foreground rounded-full px-6 py-5 font-medium">
                       <Download className="mr-2 h-4 w-4" />
                       <span>Download</span>
                   </Button>
@@ -473,10 +469,22 @@ export default function Home() {
         </Card>
       </main>
 
+        <AlertDialog open={showLimitDialog} onOpenChange={setShowLimitDialog}>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                <AlertDialogTitle>Generation Limit Reached</AlertDialogTitle>
+                <AlertDialogDescription>
+                    This is an experimental project, and for now, you can generate up to {MAX_GENERATIONS} mockups (including improvements). Thank you for trying out Mocksy!
+                </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                <AlertDialogAction onClick={() => setShowLimitDialog(false)}>
+                    Understood
+                </AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
+
     </div>
   );
 }
-
-    
-
-    

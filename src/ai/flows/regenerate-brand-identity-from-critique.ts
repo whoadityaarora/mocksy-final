@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview Regenerates a brand identity mockup image from a text prompt, a logo image, and a critique of a previous version.
