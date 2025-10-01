@@ -225,7 +225,21 @@ export default function Home() {
 
       <header className="text-center py-2">
         <div className="flex items-center justify-center space-x-2">
-           <Image src="https://storage.googleapis.com/aip-dev-images-us-central1/public/b7517c69-f144-4860-911e-080c90c74994.png" alt="Mocksy Logo" width={56} height={56} className="h-14 w-14" />
+            <svg
+              className="h-14 w-14 text-primary"
+              width="56"
+              height="56"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M12 2L2 7V17L12 22L22 17V7L12 2ZM12 12.5L15.5 10.5L19 12.5V15.5L15.5 17.5L12 15.5V12.5ZM5 12.5L8.5 10.5L12 12.5V15.5L8.5 17.5L5 15.5V12.5ZM12 4.5L19 8.5L12 12.5L5 8.5L12 4.5Z"
+                stroke="hsl(var(--background))"
+                strokeWidth="1"
+                strokeLinejoin="round"
+              />
+            </svg>
             <span className="text-5xl font-semibold text-primary">Mocksy</span>
         </div>
         <p className="mt-1 text-muted-foreground text-lg font-regular">
