@@ -56,7 +56,7 @@ const regenerateBrandIdentityFromCritiqueFlow = ai.defineFlow(
           gridInstruction = 'The final image should feature the single merchandise item prominently in a professional studio setting. Do not use any grid lines.';
         }
     
-        const promptText = `You are an AI-powered brand identity generator. Your task is to REVISE a brand mockup based on a previous version and a set of critiques.
+        const promptText = `You are an AI-powered brand identity generator. Your task is to REVISE a brand mockup based on a previous version and a set of critiques. Your goal is to create a NEW and IMPROVED image, not just a higher-quality version of the old one.
 
     **Original Brand Details:**
     - Brand Name: ${input.brandName}
@@ -64,19 +64,18 @@ const regenerateBrandIdentityFromCritiqueFlow = ai.defineFlow(
     - Main Color Theme: ${input.mainColor}
     - Design Style: ${input.style}
 
-    **Critique of the Previous Version:**
-    Here are the suggestions for improvement:
+    **Critique and Suggestions for Improvement:**
     "${input.critique}"
 
     **Instructions for Revision:**
     - You MUST address the points in the critique to create a new, improved image.
-    - Create a cohesive set of visual designs for the brand, ensuring all elements align with the provided brand details AND the critique.
-    - The provided logo must be prominently and clearly displayed on all merchandise items.
+    - **Generate a new composition.** Try a different camera angle, change the product placement, or alter the background studio setting. Be creative.
+    - Ensure the provided logo is prominently and clearly displayed on all merchandise items with perfect rendering, lighting, and resolution.
     - The products displayed should be: ${input.merchandise}.
     - The main visual color and color palette should be dominated by: ${input.mainColor}.
     - The overall design and presentation must be in a ${input.style} style.
     - ${gridInstruction}
-    - Maintain a clean, studio-quality aesthetic throughout.
+    - Maintain a clean, professional, studio-quality aesthetic throughout.
 
     **Output:**
     Return a data URI containing the generated PNG image. It is very important that this be a valid data URI.

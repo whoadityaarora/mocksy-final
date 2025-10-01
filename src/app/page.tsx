@@ -175,7 +175,7 @@ export default function Home() {
             merchandise: values.merchandise,
             previousImageUrl: currentImageUrl,
             logoDataUri: logoDataUri,
-            critique: "Improve the previous image based on these details"
+            critique: "Improve the previous image based on these details. Try a different composition or angle."
         }, userId);
 
         if (result.error) {
@@ -320,7 +320,7 @@ export default function Home() {
                   name="merchandise"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="font-medium">Merchandise Items (Comma Separated) <span className="text-primary">*</span></FormLabel>_
+                      <FormLabel className="font-medium">Merchandise Items (Comma Separated) <span className="text-primary">*</span></FormLabel>
                       <FormControl>
                         <Input placeholder="e.g., paper bag, hat, mug" {...field} className="bg-input/50 border-border rounded-lg" />
                       </FormControl>
@@ -493,5 +493,3 @@ export default function Home() {
     </div>
   );
 }
-
-    
