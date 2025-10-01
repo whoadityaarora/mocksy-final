@@ -18,7 +18,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from "@/components/ui/carousel";
+import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
 import { Download, Upload, Zap, Sparkles, AlertCircle, Loader2, Wand2, PartyPopper } from 'lucide-react';
 import Image from 'next/image';
 import { Textarea } from '@/components/ui/textarea';
@@ -459,7 +459,7 @@ export default function Home() {
                               <CarouselItem key={index} className="basis-1/4 md:basis-1/5 pl-2">
                               <div className="p-1">
                                   <Card 
-                                  className={`overflow-hidden cursor-pointer transition-all bg-input/50 aspect-square rounded-[10px] ${index === currentImageIndex ? 'border-primary border-2' : 'border-border'}`}
+                                  className={`overflow-hidden cursor-pointer transition-all bg-input/50 aspect-square rounded-[6px] ${index === currentImageIndex ? 'border-primary border-2' : 'border-border'}`}
                                   onClick={() => handleThumbnailClick(index)}
                                   >
                                   <div className="relative aspect-square">
@@ -479,11 +479,11 @@ export default function Home() {
                   </div>
                   
                   <div className="flex items-center space-x-2">
-                    <Button onClick={handleImproveClick} disabled={isImproveDisabled} className="font-medium rounded-[10px]">
-                        {isImproving ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <Wand2 className="mr-2 h-5 w-5" />}
+                    <Button onClick={handleImproveClick} disabled={isImproveDisabled} className="font-medium rounded-[6px]">
+                        <Wand2 className="mr-2 h-5 w-5" />
                         Improve
                     </Button>
-                    <Button onClick={downloadImage} variant="outline" className="font-medium rounded-[10px] bg-card/50 border-border hover:bg-input/50 hover:text-foreground">
+                    <Button onClick={downloadImage} variant="outline" className="font-medium rounded-[6px] bg-card/50 border-border hover:bg-input/50 hover:text-foreground">
                         <Download className="mr-2 h-5 w-5" />
                         Download
                     </Button>
@@ -496,20 +496,20 @@ export default function Home() {
         <AlertDialog open={showWelcomeDialog} onOpenChange={setShowWelcomeDialog}>
             <AlertDialogContent className="glass-card rounded-[10px]">
                 <AlertDialogHeader>
-                    <AlertDialogTitle className="flex items-center gap-2 text-2xl">
+                    <AlertDialogTitle className="flex items-center gap-3 text-2xl font-semibold">
                         <PartyPopper className="text-primary w-8 h-8" />
                         Welcome to Mocksy!
                     </AlertDialogTitle>
                     <AlertDialogDescription asChild>
-                        <div className="text-base text-muted-foreground pt-2 space-y-3">
+                        <div className="text-base text-muted-foreground pt-4 space-y-4">
                            <p>1. Welcome to the brand mockup generator! Just drop your logo and watch the magic happen.</p>
                            <p>2. This is an experimental project and we're still building it, so some things might not work perfectly just yet.</p>
                            <p>3. Hope you enjoy it, and thank you for being an early user!</p>
                         </div>
                     </AlertDialogDescription>
                 </AlertDialogHeader>
-                <AlertDialogFooter className="!mt-6">
-                    <AlertDialogAction className="w-full" onClick={() => setShowWelcomeDialog(false)}>
+                <AlertDialogFooter className="!mt-8">
+                    <AlertDialogAction className="w-full text-base py-5 rounded-lg" onClick={() => setShowWelcomeDialog(false)}>
                         Get Started
                     </AlertDialogAction>
                 </AlertDialogFooter>
@@ -564,6 +564,5 @@ export default function Home() {
       </AlertDialog>
     </div>
   );
-}
 
     
