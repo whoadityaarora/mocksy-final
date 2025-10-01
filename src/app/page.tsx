@@ -221,7 +221,7 @@ export default function Home() {
   const currentImageUrl = generatedImageUrls.length > 0 ? generatedImageUrls[currentImageIndex] : null;
 
   return (
-    <div className="relative h-screen flex flex-col pt-2 px-4 pb-4 sm:px-6 sm:pb-6 md:px-8 md:pb-8 font-body text-foreground">
+    <div className="relative h-screen flex flex-col pt-2 px-8 pb-4 sm:px-6 sm:pb-6 md:px-8 md:pb-8 font-body text-foreground">
 
       <header className="text-center py-2">
         <div className="flex items-center justify-center space-x-2">
@@ -233,7 +233,7 @@ export default function Home() {
             >
               <path d="M50 0L50 25L12.5 25L12.5 37.5L50 37.5L50 62.5L12.5 62.5L12.5 75L50 75L50 100L87.5 100L87.5 0L50 0Z" />
             </svg>
-            <span className="text-5xl font-semibold"> Mocksy</span>
+            <span className="text-5xl font-semibold text-primary"> Mocksy</span>
         </div>
         <p className="mt-1 text-muted-foreground text-lg font-regular">
           AI-Powered Brand Identity Mockups Generator
@@ -486,6 +486,3 @@ export default function Home() {
     </div>
   );
 }
-
-    
-    
