@@ -235,8 +235,8 @@ export default function Home() {
     }
   }, [generatedImageUrls, currentImageIndex, form]);
   
-  const isGenerateDisabled = isLoading || !logoFile || isImproving; 
-  const isImproveDisabled = isLoading || isImproving || generatedImageUrls.length === 0;
+  const isGenerateDisabled = isLoading || !logoFile || isImproving || generatedImageUrls.length >= MAX_GENERATIONS; 
+  const isImproveDisabled = isLoading || isImproving || generatedImageUrls.length === 0 || generatedImageUrls.length >= MAX_GENERATIONS;
   const currentImageUrl = generatedImageUrls.length > 0 ? generatedImageUrls[currentImageIndex] : null;
 
   return (
@@ -564,4 +564,5 @@ export default function Home() {
       </AlertDialog>
     </div>
   );
-}
+
+    
