@@ -226,13 +226,13 @@ export default function Home() {
 
       <header className="text-center py-2">
         <div className="flex items-center justify-center space-x-2">
-            <svg 
-              xmlns="http://www.w3.org/2000/svg" 
-              viewBox="0 0 24 24" 
-              fill="currentColor" 
-              className="h-10 w-10 text-primary"
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 256 218"
+                className="h-10 w-10 text-primary"
+                fill="currentColor"
             >
-              <path d="M5.33398 3.00005L2 6.00005V18L5.33398 21H18.667L22 18V6.00005L18.667 3.00005H5.33398ZM12 8.00005L16 11L12 14L8 11L12 8.00005Z" />
+                <path d="M128 0L0 74.24V218L128 143.76L256 218V74.24L128 0ZM32.4 90.64L128 38.08L223.6 90.64L128 143.2L32.4 90.64Z" />
             </svg>
             <span className="text-3xl font-semibold"> Mocksy</span>
         </div>
