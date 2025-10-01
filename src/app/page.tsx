@@ -222,18 +222,17 @@ export default function Home() {
   const currentImageUrl = generatedImageUrls.length > 0 ? generatedImageUrls[currentImageIndex] : null;
 
   return (
-    <div className="relative h-screen flex flex-col p-4 sm:p-6 md:p-8 font-body text-foreground">
+    <div className="relative h-screen flex flex-col p-4 sm:p-6 md:p-12 font-body text-foreground">
 
       <header className="text-center py-2">
         <div className="flex items-center justify-center space-x-2">
-           <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 256 218"
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              viewBox="0 0 24 24" 
+              fill="currentColor" 
               className="h-10 w-10 text-primary"
-              fill="currentColor"
             >
-              <path d="M128 0L0 74.24V218h256V74.24L128 0zM31.43 85.49l96.57-55.69 96.57 55.69v55.69l-96.57 55.69-96.57-55.69V85.49z" />
-              <path d="M73.53 111.45l54.47-31.42 54.47 31.42v31.42l-54.47 31.42-54.47-31.42v-31.42z" />
+              <path d="M5.33398 3.00005L2 6.00005V18L5.33398 21H18.667L22 18V6.00005L18.667 3.00005H5.33398ZM12 8.00005L16 11L12 14L8 11L12 8.00005Z" />
             </svg>
             <span className="text-3xl font-semibold"> Mocksy</span>
         </div>
@@ -242,7 +241,7 @@ export default function Home() {
         </p>
       </header>
 
-      <main className="grid grid-cols-1 lg:grid-cols-3 gap-4 max-w-7xl mx-auto flex-grow w-full pb-2">
+      <main className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto flex-grow w-full pb-2">
         <Card className="lg:col-span-1 glass-card rounded-2xl flex flex-col">
            <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="p-6 space-y-4 flex flex-col flex-grow">
