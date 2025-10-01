@@ -252,20 +252,18 @@ export default function Home() {
           strokeLinejoin="round"
           className="h-14 w-14 text-primary"
         >
-          <path d="M12 2L2 7l10 5 10-5-10-5z" fill="currentColor" fillOpacity="0.2"/>
-          <path d="M2 17l10 5 10-5" stroke="currentColor"/>
-          <path d="M2 12l10 5 10-5" stroke="currentColor"/>
-           <path
-            d="M17.5 9.5 22 12l-10 5-10-5 4.5-2.5"
-            fill="currentColor"
-            stroke="none"
-          />
           <path
             d="M22 2.5 12 8l-10-5.5L12 2l10 .5z"
             stroke="currentColor"
             fill="currentColor"
             transform="translate(0, -0.5)"
           />
+          <path
+            d="M17.5 9.5 22 12l-10 5-10-5 4.5-2.5"
+            fill="currentColor"
+            stroke="none"
+          />
+          <path d="M2 12l10 5 10-5" />
         </svg>
 
             <span className="text-5xl font-semibold text-primary">Mocksy</span>
