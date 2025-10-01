@@ -243,15 +243,15 @@ export default function Home() {
       <header className="text-center py-2">
         <div className="flex items-center justify-center space-x-3">
         <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 256 256"
-            className="h-14 w-14 text-primary"
-            fill="currentColor"
-          >
-            <path d="m221.16 53.16-28.28 28.28a12 12 0 0 1-17 0l-11.32-11.32a12 12 0 0 1 0-17l28.28-28.28a12 12 0 0 1 17 0l11.32 11.32a12 12 0 0 1 0 17Z" opacity="0.5"/>
-            <path d="M192.51,69.83a12,12,0,0,0-17,0L24,220.34A12,12,0,0,0,35.31,237.66L185.83,87.14a12,12,0,0,0,0-17ZM73.66,192,48,166.34,159.31,55,185,80.69Z"/>
-            <path d="M185.83,87.14,208,109.31l16.49-16.48a12,12,0,0,0,0-17Z"/>
-          </svg>
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 256 256"
+          className="h-14 w-14 text-primary"
+          fill="currentColor"
+        >
+            <path d="M168,40a24,24,0,1,1-24,24,24,24,0,0,1,24-24Z" opacity="0.1"></path>
+            <path d="M232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128ZM168,64a24,24,0,1,0-24-24,24,24,0,0,0,24,24Zm-86.35,93.65a40,40,0,0,0,56.7,0l42.34,42.34a8,8,0,0,1-11.32,11.32L127.05,179a8,8,0,0,1-11.31,0L81.66,211.31a8,8,0,0,1-11.32-11.32Z"></path>
+        </svg>
+
             <span className="text-5xl font-semibold text-primary">Mocksy</span>
         </div>
         <p className="mt-2 text-muted-foreground text-lg font-regular">
@@ -510,6 +510,10 @@ export default function Home() {
               <AlertDialogTitle>Improve Your Mockup</AlertDialogTitle>
               <AlertDialogDescription>
                 Tell the AI what you'd like to change. Be specific! For example, "Make the background darker," or "Use a different font for the text."
+                <br /><br />
+                <span className='text-xs text-muted-foreground'>
+                    <b>Note:</b> This feature is experimental. You can also leave this blank and click "Regenerate" to let the AI try a completely new idea.
+                </span>
               </AlertDialogDescription>
             </AlertDialogHeader>
             <div className="grid gap-4 py-4">
@@ -533,5 +537,7 @@ export default function Home() {
     </div>
   );
 }
+
+    
 
     
