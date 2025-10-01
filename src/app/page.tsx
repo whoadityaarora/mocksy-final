@@ -18,7 +18,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertDialog, AlertDialogAction, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
+import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext, type CarouselApi } from "@/components/ui/carousel";
 import { Download, Upload, Zap, Sparkles, AlertCircle, Loader2, Wand2 } from 'lucide-react';
 import Image from 'next/image';
 
@@ -133,7 +133,11 @@ export default function Home() {
         setGeneratedImageUrls(prev => [result.imageUrl]);
         setStatusMessage('Brand identity successfully generated! Review and download your high-resolution mockups.');
         setCurrentImageIndex(0);
-        carouselApi?.scrollTo(0);
+        
+        setTimeout(() => {
+            carouselApi?.scrollTo(0);
+        }, 100);
+
       } else {
         throw new Error("The AI model did not return an image.");
       }
@@ -442,13 +446,15 @@ export default function Home() {
                               </CarouselItem>
                           ))}
                           </CarouselContent>
+                          <CarouselPrevious className="left-2" />
+                          <CarouselNext className="right-2" />
                       </Carousel>
                   </div>
                   
-                  <Button onClick={onImprove} disabled={isImproveDisabled} size="icon" className="shadow-lg transition-transform transform hover:scale-105 active:scale-95 rounded-md h-12 w-12 font-medium">
+                  <Button onClick={onImprove} disabled={isImproveDisabled} size="icon" className="shadow-lg transition-transform transform hover:scale-105 active:scale-95 rounded-full h-12 w-12 font-medium">
                       {isImproving ? <Loader2 className="h-5 w-5 animate-spin" /> : <Wand2 className="h-5 w-5" />}
                   </Button>
-                  <Button onClick={downloadImage} variant="outline" size="icon" className="shadow-lg transition-transform transform hover:scale-105 active:scale-95 bg-card/50 border-border hover:bg-input/50 hover:text-foreground rounded-md h-12 w-12 font-medium">
+                  <Button onClick={downloadImage} variant="outline" size="icon" className="shadow-lg transition-transform transform hover:scale-105 active:scale-95 bg-card/50 border-border hover:bg-input/50 hover:text-foreground rounded-full h-12 w-12 font-medium">
                       <Download className="h-5 w-5" />
                   </Button>
               </div>
@@ -477,5 +483,7 @@ export default function Home() {
 }
 
 
+
+    
 
     
