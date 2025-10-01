@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
@@ -101,11 +102,24 @@ export default function Home() {
   useEffect(() => {
     if (!carouselApi) return;
     
-    carouselApi.on("select", () => {
+    const handleSelect = () => {
       setCurrentImageIndex(carouselApi.selectedScrollSnap());
-    });
+    };
+    
+    carouselApi.on("select", handleSelect);
+    
+    return () => {
+      carouselApi.off("select", handleSelect);
+    };
     
   }, [carouselApi]);
+
+  const handleThumbnailClick = (index: number) => {
+    if (carouselApi) {
+      carouselApi.scrollTo(index);
+    }
+    setCurrentImageIndex(index);
+  };
 
   const onSubmit = async (values: z.infer<typeof brandFormSchema>) => {
     setGeneratedImageUrls([]); // Clear previous results
@@ -124,6 +138,7 @@ export default function Home() {
       if (result.imageUrl) {
         setGeneratedImageUrls(prev => [result.imageUrl]);
         setStatusMessage('Brand identity successfully generated! Review and download your high-resolution mockups.');
+        setCurrentImageIndex(0);
         carouselApi?.scrollTo(0);
       } else {
         throw new Error("The AI model did not return an image.");
@@ -177,7 +192,10 @@ export default function Home() {
             setStatusMessage('Successfully generated an improved mockup!');
             
             // Wait for the state to update and then scroll
-            setTimeout(() => carouselApi?.scrollTo(newImageIndex), 0);
+            setTimeout(() => {
+                carouselApi?.scrollTo(newImageIndex);
+                setCurrentImageIndex(newImageIndex);
+            }, 0);
         } else {
             throw new Error("The AI model did not return an improved image.");
         }
@@ -198,7 +216,7 @@ export default function Home() {
     if (currentImageUrl) {
       const link = document.createElement('a');
       link.href = currentImageUrl;
-      link.download = `${(form.getValues('brandName') || 'brand').toLowerCase().replace(/\s/g, '_')}_mockup.png`;
+      link.download = `${(form.getValues('brandName') || 'brand').toLowerCase().replace(/\s/g, '_')}_mockup_${currentImageIndex + 1}.png`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -412,47 +430,45 @@ export default function Home() {
               )}
             </div>
             
-            {generatedImageUrls.length > 1 && !isLoading && (
-              <div className="relative w-full max-w-full px-12 mt-4">
-                 <Carousel setApi={setCarouselApi} opts={{align: "start"}} className="w-full">
-                    <CarouselContent className="-ml-2">
-                      {generatedImageUrls.map((url, index) => (
-                        <CarouselItem key={index} className="basis-1/4 pl-2">
-                          <div className="p-1">
-                            <Card 
-                              className={`overflow-hidden cursor-pointer transition-all bg-input/50 aspect-square ${index === currentImageIndex ? 'border-primary border-2' : 'border-border'}`}
-                              onClick={() => carouselApi?.scrollTo(index)}
-                            >
-                              <div className="relative aspect-square">
-                                <Image
-                                  src={url}
-                                  alt={`Generated Mockup ${index + 1}`}
-                                  fill
-                                  className="object-cover"
-                                />
+            {generatedImageUrls.length > 0 && !isLoading && (
+              <div className="flex items-center justify-center space-x-4 mt-4">
+                  <div className="relative flex-grow max-w-lg">
+                      <Carousel setApi={setCarouselApi} opts={{align: "start"}} className="w-full">
+                          <CarouselContent className="-ml-2">
+                          {generatedImageUrls.map((url, index) => (
+                              <CarouselItem key={index} className="basis-1/4 md:basis-1/5 pl-2">
+                              <div className="p-1">
+                                  <Card 
+                                  className={`overflow-hidden cursor-pointer transition-all bg-input/50 aspect-square ${index === currentImageIndex ? 'border-primary border-2' : 'border-border'}`}
+                                  onClick={() => handleThumbnailClick(index)}
+                                  >
+                                  <div className="relative aspect-square">
+                                      <Image
+                                      src={url}
+                                      alt={`Generated Mockup ${index + 1}`}
+                                      fill
+                                      className="object-cover"
+                                      />
+                                  </div>
+                                  </Card>
                               </div>
-                            </Card>
-                          </div>
-                        </CarouselItem>
-                      ))}
-                    </CarouselContent>
-                    <CarouselPrevious className="bg-card/50 border-border hover:bg-input/50"/>
-                    <CarouselNext className="bg-card/50 border-border hover:bg-input/50"/>
-                  </Carousel>
+                              </CarouselItem>
+                          ))}
+                          </CarouselContent>
+                          <CarouselPrevious className="bg-card/50 border-border hover:bg-input/50 -left-10"/>
+                          <CarouselNext className="bg-card/50 border-border hover:bg-input/50 -right-10"/>
+                      </Carousel>
+                  </div>
+                  
+                  <Button onClick={onImprove} disabled={isImproveDisabled} className="shadow-lg transition-transform transform hover:scale-105 active:scale-95 bg-primary text-primary-foreground rounded-lg px-6 py-5 font-medium">
+                      {isImproving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
+                      <span>Improve</span>
+                  </Button>
+                  <Button onClick={downloadImage} variant="outline" className="shadow-lg transition-transform transform hover:scale-105 active:scale-95 bg-card/50 border-border hover:bg-input/50 hover:text-foreground rounded-lg px-6 py-5 font-medium">
+                      <Download className="mr-2 h-4 w-4" />
+                      <span>Download</span>
+                  </Button>
               </div>
-            )}
-            
-            {currentImageUrl && !isLoading && !isImproving && (
-                <div className="flex justify-center space-x-4 mt-4">
-                    <Button onClick={onImprove} disabled={isImproveDisabled} className="shadow-lg transition-transform transform hover:scale-105 active:scale-95 bg-primary text-primary-foreground rounded-lg px-6 py-5 font-medium">
-                        {isImproving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
-                        <span>Improve</span>
-                    </Button>
-                    <Button onClick={downloadImage} variant="outline" className="shadow-lg transition-transform transform hover:scale-105 active:scale-95 bg-card/50 border-border hover:bg-input/50 hover:text-foreground rounded-lg px-6 py-5 font-medium">
-                        <Download className="mr-2 h-4 w-4" />
-                        <span>Download File</span>
-                    </Button>
-                </div>
             )}
         </Card>
       </main>
@@ -460,5 +476,7 @@ export default function Home() {
     </div>
   );
 }
+
+    
 
     
