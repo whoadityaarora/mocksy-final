@@ -331,7 +331,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className='!mt-6 space-y-2'>
+              <div className='!mt-auto space-y-2'>
                 <Button type="submit" disabled={isGenerateDisabled} className="w-full text-base font-semibold py-5 transition-transform transform hover:scale-[1.02] active:scale-[0.98] rounded-lg bg-primary text-primary-foreground">
                   {isLoading ? (
                     <Loader2 className="mr-2 h-5 w-5 animate-spin" />
