@@ -188,9 +188,9 @@ export default function Home() {
   const currentImageUrl = generatedImageUrls.length > 0 ? generatedImageUrls[currentImageIndex] : null;
 
   return (
-    <div className="relative min-h-screen p-4 sm:p-8 font-body text-foreground">
+    <div className="relative min-h-screen p-4 font-body text-foreground">
 
-      <header className="text-center mb-8">
+      <header className="text-center mb-6">
         <div className="flex items-center justify-center space-x-2">
             <Image src="/logo.png" alt="Mocksy Logo" width={48} height={48} />
             <span className="text-4xl font-bold"> Mocksy</span>
@@ -200,10 +200,10 @@ export default function Home() {
         </p>
       </header>
 
-      <main className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+      <main className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
         <Card className="lg:col-span-1 h-fit glass-card rounded-2xl">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="p-6 sm:p-8 space-y-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="p-6 space-y-4">
               <h2 className="text-2xl font-bold text-card-foreground">Brand Definition</h2>
               
               <FormField
@@ -228,17 +228,17 @@ export default function Home() {
                     <FormLabel>Upload Logo Image <span className="text-primary">*</span></FormLabel>
                     <FormControl>
                       <div 
-                        className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed border-border rounded-xl cursor-pointer hover:border-primary/80 transition bg-input/50"
+                        className="mt-1 flex justify-center px-4 py-4 border-2 border-dashed border-border rounded-xl cursor-pointer hover:border-primary/80 transition bg-input/50"
                         onClick={() => fileInputRef.current?.click()}
                       >
                          <div className="space-y-1 text-center">
                             {logoPreviewUrl ? (
-                              <div className='relative w-40 h-24 mx-auto'>
+                              <div className='relative w-28 h-16 mx-auto'>
                                 <Image src={logoPreviewUrl} alt="Logo Preview" fill objectFit="contain" />
                               </div>
                             ) : (
                               <>
-                                <Upload className="mx-auto h-10 w-10 text-muted-foreground/50" />
+                                <Upload className="mx-auto h-8 w-8 text-muted-foreground/50" />
                                 <div className="flex text-sm text-muted-foreground">
                                     <span className="font-medium text-primary hover:text-primary/80">
                                       Click/Drag to upload Logo
@@ -321,8 +321,8 @@ export default function Home() {
                 />
               </div>
 
-              <div className='!mt-8 space-y-2'>
-                <Button type="submit" disabled={isGenerateDisabled} className="w-full text-base font-semibold py-6 transition-transform transform hover:scale-[1.02] active:scale-[0.98] rounded-lg bg-primary text-primary-foreground">
+              <div className='!mt-6 space-y-2'>
+                <Button type="submit" disabled={isGenerateDisabled} className="w-full text-base font-semibold py-5 transition-transform transform hover:scale-[1.02] active:scale-[0.98] rounded-lg bg-primary text-primary-foreground">
                   {isLoading ? (
                     <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                   ) : (
@@ -335,7 +335,7 @@ export default function Home() {
           </Form>
         </Card>
 
-        <Card className="lg:col-span-2 p-6 sm:p-8 flex flex-col glass-card rounded-2xl">
+        <Card className="lg:col-span-2 p-6 flex flex-col glass-card rounded-2xl">
            <h2 className="text-2xl font-bold text-card-foreground mb-4">Generated Mockups</h2>
           
             <div className="min-h-12 mb-4">
@@ -353,7 +353,7 @@ export default function Home() {
                 )}
             </div>
 
-            <div className="relative border-2 border-dashed border-border rounded-2xl overflow-hidden flex-grow min-h-[400px] flex items-center justify-center bg-input/50 p-4">
+            <div className="relative border-2 border-dashed border-border rounded-2xl overflow-hidden flex-grow min-h-[350px] flex items-center justify-center bg-input/50 p-4">
               {isLoading && (
                    <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-10">
                       <div className="text-center">
@@ -384,7 +384,7 @@ export default function Home() {
             </div>
             
             {generatedImageUrls.length > 1 && !isLoading && (
-              <div className="relative w-full p-4 mt-4">
+              <div className="relative w-full p-4 mt-2">
                  <Carousel setApi={setCarouselApi} opts={{align: "start"}} className="w-full">
                     <CarouselContent className="-ml-2">
                       {generatedImageUrls.map((url, index) => (
@@ -414,7 +414,7 @@ export default function Home() {
             )}
             
             {currentImageUrl && !isLoading && (
-                <div className="flex justify-center space-x-4 mt-4">
+                <div className="flex justify-center space-x-4 mt-2">
                     <Button onClick={onImprove} disabled={isImproving} className="shadow-lg transition-transform transform hover:scale-105 active:scale-95 bg-primary text-primary-foreground rounded-lg px-6 py-5 font-semibold">
                         {isImproving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
                         <span>Improve</span>
