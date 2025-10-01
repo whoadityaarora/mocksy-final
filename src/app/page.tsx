@@ -225,15 +225,8 @@ export default function Home() {
 
       <header className="text-center py-2">
         <div className="flex items-center justify-center space-x-2">
-           <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 100 100"
-              className="h-14 w-14 text-primary"
-              fill="currentColor"
-            >
-              <path d="M50 0L50 25L12.5 25L12.5 37.5L50 37.5L50 62.5L12.5 62.5L12.5 75L50 75L50 100L87.5 100L87.5 0L50 0Z" />
-            </svg>
-            <span className="text-5xl font-semibold text-primary"> Mocksy</span>
+           <Image src="https://storage.googleapis.com/aip-dev-images-us-central1/public/b7517c69-f144-4860-911e-080c90c74994.png" alt="Mocksy Logo" width={56} height={56} className="h-14 w-14" />
+            <span className="text-5xl font-semibold text-primary">Mocksy</span>
         </div>
         <p className="mt-1 text-muted-foreground text-lg font-regular">
           AI-Powered Brand Identity Mockups Generator
@@ -313,7 +306,7 @@ export default function Home() {
                   name="merchandise"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="font-medium">Merchandise Items (Comma Separated) <span className="text-primary">*</span></FormLabel>
+                      <FormLabel className="font-medium">Merchandise Items (Comma Separated) <span className="text-primary">*</span></FormLabel>_
                       <FormControl>
                         <Input placeholder="e.g., paper bag, hat, mug" {...field} className="bg-input/50 border-border rounded-lg" />
                       </FormControl>
@@ -486,3 +479,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
