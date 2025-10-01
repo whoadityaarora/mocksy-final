@@ -413,7 +413,7 @@ export default function Home() {
             </div>
             
             {generatedImageUrls.length > 1 && !isLoading && (
-              <div className="relative w-full p-4 mt-2">
+              <div className="relative w-full max-w-full px-12 mt-4">
                  <Carousel setApi={setCarouselApi} opts={{align: "start"}} className="w-full">
                     <CarouselContent className="-ml-2">
                       {generatedImageUrls.map((url, index) => (
@@ -443,7 +443,7 @@ export default function Home() {
             )}
             
             {currentImageUrl && !isLoading && !isImproving && (
-                <div className="flex justify-center space-x-4 mt-2">
+                <div className="flex justify-center space-x-4 mt-4">
                     <Button onClick={onImprove} disabled={isImproveDisabled} className="shadow-lg transition-transform transform hover:scale-105 active:scale-95 bg-primary text-primary-foreground rounded-lg px-6 py-5 font-medium">
                         {isImproving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
                         <span>Improve</span>
@@ -460,3 +460,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
