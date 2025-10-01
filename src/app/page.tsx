@@ -114,6 +114,7 @@ export default function Home() {
     setError(null);
     setGeneratedImageUrls([]); // Clear previous results
     setStatusMessage('Generating cohesive brand identity mockups...');
+    setCurrentImageIndex(0);
 
     try {
       const result = await generateIdentityAction(values, userId);
@@ -124,7 +125,6 @@ export default function Home() {
       
       if (result.imageUrl) {
         setGeneratedImageUrls(prev => [...prev, result.imageUrl]);
-        setCurrentImageIndex(0); // Start with the first image
         setStatusMessage('Brand identity successfully generated! Review and download your high-resolution mockups.');
         carouselApi?.scrollTo(0);
       } else {
@@ -200,7 +200,7 @@ export default function Home() {
         </p>
       </header>
 
-      <main className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
+      <main className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
         <Card className="lg:col-span-1 h-fit bg-card border-border rounded-2xl shadow-[0_0_20px_rgba(255,140,0,0.1)]">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="p-6 sm:p-8 space-y-6">
@@ -335,7 +335,7 @@ export default function Home() {
           </Form>
         </Card>
 
-        <Card className="lg:col-span-1 p-6 sm:p-8 flex flex-col bg-card border-border rounded-2xl shadow-[0_0_20px_rgba(255,140,0,0.1)]">
+        <Card className="lg:col-span-2 p-6 sm:p-8 flex flex-col bg-card border-border rounded-2xl shadow-[0_0_20px_rgba(255,140,0,0.1)]">
            <h2 className="text-2xl font-bold text-card-foreground mb-4">Generated Mockups</h2>
           
             <div className="min-h-12 mb-4">
@@ -449,3 +449,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
