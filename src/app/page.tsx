@@ -193,7 +193,7 @@ export default function Home() {
 
       <header className="text-center mb-2">
         <div className="flex items-center justify-center space-x-2">
-             <svg
+              <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 256 218"
                 className="h-10 w-10 text-primary"
@@ -291,44 +291,42 @@ export default function Home() {
                   )}
                 />
                 
-                <div className="grid grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="mainColor"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Main Color Theme <span className="text-primary">*</span></FormLabel>
-                        <FormControl>
-                          <Input placeholder="e.g., Violet or #E2E2E2" {...field} className="bg-input/50 border-border rounded-lg"/>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                <FormField
+                  control={form.control}
+                  name="mainColor"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Main Color Theme <span className="text-primary">*</span></FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g., Violet or #E2E2E2" {...field} className="bg-input/50 border-border rounded-lg"/>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-                  <FormField
-                    control={form.control}
-                    name="style"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Design Style <span className="text-primary">*</span></FormLabel>
-                        <Select onValueChange={field.onChange} value={field.value}>
-                            <FormControl>
-                              <SelectTrigger className="bg-input/50 border-border rounded-lg">
-                                <SelectValue placeholder="Select a Design style" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {STYLE_OPTIONS.map((opt) => (
-                                <SelectItem key={opt} value={opt}>{opt}</SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+                <FormField
+                  control={form.control}
+                  name="style"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Design Style <span className="text-primary">*</span></FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                          <FormControl>
+                            <SelectTrigger className="bg-input/50 border-border rounded-lg">
+                              <SelectValue placeholder="Select a Design style" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {STYLE_OPTIONS.map((opt) => (
+                              <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
 
               <div className='!mt-auto space-y-2'>
