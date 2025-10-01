@@ -18,7 +18,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertDialog, AlertDialogAction, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from "@/components/ui/carousel";
+import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
 import { Download, Upload, Zap, Sparkles, AlertCircle, Loader2, Wand2 } from 'lucide-react';
 import Image from 'next/image';
 
@@ -175,7 +175,7 @@ export default function Home() {
             merchandise: values.merchandise,
             previousImageUrl: currentImageUrl,
             logoDataUri: logoDataUri,
-            critique: "Improve the previous image based on these details. Try a different composition or angle."
+            critique: "Generate a new composition. Try a different camera angle, change the product placement, or alter the background studio setting. Be creative."
         }, userId);
 
         if (result.error) {
@@ -225,21 +225,7 @@ export default function Home() {
 
       <header className="text-center py-2">
         <div className="flex items-center justify-center space-x-2">
-            <svg
-              className="h-14 w-14 text-primary"
-              width="56"
-              height="56"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M12 2L2 7V17L12 22L22 17V7L12 2ZM12 12.5L15.5 10.5L19 12.5V15.5L15.5 17.5L12 15.5V12.5ZM5 12.5L8.5 10.5L12 12.5V15.5L8.5 17.5L5 15.5V12.5ZM12 4.5L19 8.5L12 12.5L5 8.5L12 4.5Z"
-                stroke="hsl(var(--background))"
-                strokeWidth="1"
-                strokeLinejoin="round"
-              />
-            </svg>
+            <Image src="https://storage.googleapis.com/aip-dev-images-us-central1/public/b7517c69-f144-4860-911e-080c90c74994.png" alt="Mocksy Logo" width={56} height={56} />
             <span className="text-5xl font-semibold text-primary">Mocksy</span>
         </div>
         <p className="mt-1 text-muted-foreground text-lg font-regular">
@@ -440,7 +426,7 @@ export default function Home() {
                               <CarouselItem key={index} className="basis-1/4 md:basis-1/5 pl-2">
                               <div className="p-1">
                                   <Card 
-                                  className={`overflow-hidden cursor-pointer transition-all bg-input/50 aspect-square ${index === currentImageIndex ? 'border-primary border-2' : 'border-border'}`}
+                                  className={`overflow-hidden cursor-pointer transition-all bg-input/50 aspect-square rounded-md ${index === currentImageIndex ? 'border-primary border-2' : 'border-border'}`}
                                   onClick={() => handleThumbnailClick(index)}
                                   >
                                   <div className="relative aspect-square">
@@ -456,18 +442,14 @@ export default function Home() {
                               </CarouselItem>
                           ))}
                           </CarouselContent>
-                          <CarouselPrevious className="bg-card/50 border-border hover:bg-input/50 left-2"/>
-                          <CarouselNext className="bg-card/50 border-border hover:bg-input/50 right-2"/>
                       </Carousel>
                   </div>
                   
-                  <Button onClick={onImprove} disabled={isImproveDisabled} className="shadow-lg transition-transform transform hover:scale-105 active:scale-95 rounded-full px-6 py-5 font-medium">
-                      {isImproving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
-                      <span>Improve</span>
+                  <Button onClick={onImprove} disabled={isImproveDisabled} size="icon" className="shadow-lg transition-transform transform hover:scale-105 active:scale-95 rounded-md h-12 w-12 font-medium">
+                      {isImproving ? <Loader2 className="h-5 w-5 animate-spin" /> : <Wand2 className="h-5 w-5" />}
                   </Button>
-                  <Button onClick={downloadImage} variant="outline" className="shadow-lg transition-transform transform hover:scale-105 active:scale-95 bg-card/50 border-border hover:bg-input/50 hover:text-foreground rounded-full px-6 py-5 font-medium">
-                      <Download className="mr-2 h-4 w-4" />
-                      <span>Download</span>
+                  <Button onClick={downloadImage} variant="outline" size="icon" className="shadow-lg transition-transform transform hover:scale-105 active:scale-95 bg-card/50 border-border hover:bg-input/50 hover:text-foreground rounded-md h-12 w-12 font-medium">
+                      <Download className="h-5 w-5" />
                   </Button>
               </div>
             )}
@@ -493,3 +475,4 @@ export default function Home() {
     </div>
   );
 }
+
