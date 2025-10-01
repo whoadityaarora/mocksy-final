@@ -193,13 +193,13 @@ export default function Home() {
 
       <header className="text-center mb-2">
         <div className="flex items-center justify-center space-x-2">
-              <svg
+             <svg
                 xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 256 218"
+                viewBox="0 0 100 100"
                 className="h-10 w-10 text-primary"
                 fill="currentColor"
               >
-                <path d="M188.8,0L0,188.8V218H29.2L218,29.2V0H188.8ZM256,54.5L169.5,141H256V54.5Z" />
+                <path d="M10 90 L10 10 L30 10 L30 50 L50 30 L70 50 L70 10 L90 10 L90 90 L70 90 L70 60 L50 80 L30 60 L30 90 Z" />
               </svg>
             <span className="text-3xl font-bold"> Mocksy</span>
         </div>
@@ -457,3 +457,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
