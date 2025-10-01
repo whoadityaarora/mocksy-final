@@ -101,17 +101,18 @@ export default function Home() {
   }, []);
   
   useEffect(() => {
-    if (carouselApi) {
-      carouselApi.on("select", () => {
-        setCurrentImageIndex(carouselApi.selectedScrollSnap());
-      });
-    }
+    if (!carouselApi) return;
+    
+    carouselApi.on("select", () => {
+      setCurrentImageIndex(carouselApi.selectedScrollSnap());
+    });
+    
   }, [carouselApi]);
 
   const onSubmit = async (values: z.infer<typeof brandFormSchema>) => {
     setIsLoading(true);
     setError(null);
-    setGeneratedImageUrls([]);
+    setGeneratedImageUrls([]); // Clear previous results
     setStatusMessage('Generating cohesive brand identity mockups...');
 
     try {
@@ -121,9 +122,13 @@ export default function Home() {
         throw new Error(result.error);
       }
       
-      setGeneratedImageUrls([result.imageUrl as string]);
-      setCurrentImageIndex(0);
-      setStatusMessage('Brand identity successfully generated! Review and download your high-resolution mockups.');
+      if (result.imageUrl) {
+        setGeneratedImageUrls([result.imageUrl]);
+        setCurrentImageIndex(0);
+        setStatusMessage('Brand identity successfully generated! Review and download your high-resolution mockups.');
+      } else {
+        throw new Error("The AI model did not return an image.");
+      }
       
       // if(userId) fetchUsage(userId);
 
@@ -180,7 +185,7 @@ export default function Home() {
   
   // const isLimitReached = usageCount >= MAX_GENERATIONS;
   const isGenerateDisabled = isLoading || !logoFile; // || isLimitReached;
-  const currentImageUrl = generatedImageUrls[currentImageIndex] ?? null;
+  const currentImageUrl = generatedImageUrls.length > 0 ? generatedImageUrls[currentImageIndex] : null;
 
   return (
     <div className="min-h-screen bg-background p-4 sm:p-8 font-body text-foreground">
@@ -246,7 +251,12 @@ export default function Home() {
                               type="file" 
                               className="sr-only" 
                               accept="image/png, image/jpeg, image/jpg, image/webp, image/heic"
-                              onChange={(e) => onChange(e.target.files?.[0])}
+                              onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (file) {
+                                    onChange(file);
+                                }
+                              }}
                             />
                          </div>
                       </div>
@@ -265,7 +275,7 @@ export default function Home() {
                     <FormControl>
                       <Input placeholder="e.g., packaging bag, hat, lanyard" {...field} />
                     </FormControl>
-                    <p className="mt-1 text-xs text-muted-foreground/70">List 3-5 items for the best result.</p>
+                    <p className="mt-1 text-xs text-muted-foreground/70">List 1-6 items for the best result.</p>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -349,6 +359,19 @@ export default function Home() {
             </div>
 
             <div className="relative border-4 border-dashed border-muted rounded-2xl overflow-hidden flex-grow min-h-[500px] flex items-center justify-center bg-background/50 p-4">
+              {isLoading && (
+                   <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-10">
+                      <div className="text-center">
+                          <Loader2 className="h-12 w-12 text-primary animate-spin mx-auto" />
+                          <p className="mt-4 text-primary font-medium text-lg">
+                              AI is crafting your brand identity...
+                          </p>
+                          <p className="mt-1 text-sm text-muted-foreground">
+                              This may take a moment.
+                          </p>
+                      </div>
+                  </div>
+              )}
               {currentImageUrl && !isLoading && (
                   <img
                       src={currentImageUrl}
@@ -365,23 +388,10 @@ export default function Home() {
                        <p className="text-sm">Fill in the form and click &lsquo;Generate Mockups&rsquo;.</p>
                   </div>
               )}
-              {isLoading && (
-                   <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-10">
-                      <div className="text-center">
-                          <Loader2 className="h-12 w-12 text-primary animate-spin mx-auto" />
-                          <p className="mt-4 text-primary font-medium text-lg">
-                              AI is crafting your brand identity...
-                          </p>
-                          <p className="mt-1 text-sm text-muted-foreground">
-                              This may take a moment.
-                          </p>
-                      </div>
-                  </div>
-              )}
             </div>
             
             {generatedImageUrls.length > 0 && !isLoading && (
-              <div className="relative w-full p-4">
+              <div className="relative w-full p-4 mt-4">
                  <Carousel setApi={setCarouselApi} className="w-full max-w-xs mx-auto">
                     <CarouselContent>
                       {generatedImageUrls.map((url, index) => (

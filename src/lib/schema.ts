@@ -9,7 +9,6 @@ export const brandFormSchema = z.object({
   mainColor: z.string().min(1, { message: "A main color is required." }),
   style: z.string().min(1, { message: "Please select a design style."}),
   logoFile: z.instanceof(File, { message: "Logo image is required." })
-    .refine((file) => !!file, "Logo image is required.")
     .refine((file) => file.size <= MAX_FILE_SIZE, `Max file size is 5MB.`)
     .refine(
       (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
