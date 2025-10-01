@@ -191,9 +191,9 @@ export default function Home() {
   return (
     <div className="relative h-screen flex flex-col p-2 font-body text-foreground">
 
-      <header className="text-center mb-2">
+      <header className="text-center py-2">
         <div className="flex items-center justify-center space-x-2">
-            <svg
+           <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 100 100"
               className="h-10 w-10 text-primary"
@@ -203,14 +203,14 @@ export default function Home() {
             </svg>
             <span className="text-3xl font-semibold"> Mocksy</span>
         </div>
-        <p className="mt-1 text-muted-foreground text-sm">
+        <p className="mt-1 text-muted-foreground text-sm font-regular">
           AI-Powered Brand Identity Mockups Generator
         </p>
       </header>
 
-      <main className="grid grid-cols-1 lg:grid-cols-3 gap-4 max-w-7xl mx-auto flex-grow w-full">
+      <main className="grid grid-cols-1 lg:grid-cols-3 gap-4 max-w-7xl mx-auto flex-grow w-full pb-2">
         <Card className="lg:col-span-1 glass-card rounded-2xl flex flex-col">
-          <Form {...form}>
+           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="p-6 space-y-4 flex flex-col flex-grow">
               <h2 className="text-xl font-semibold text-card-foreground">Brand Definition</h2>
               
@@ -220,7 +220,7 @@ export default function Home() {
                   name="brandName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Brand/Company Name</FormLabel>
+                      <FormLabel className="font-medium">Brand/Company Name</FormLabel>
                       <FormControl>
                         <Input placeholder="e.g., Hello AI" {...field} className="bg-input/50 border-border rounded-lg" />
                       </FormControl>
@@ -234,7 +234,7 @@ export default function Home() {
                   name="logoFile"
                   render={({ field: { onChange } }) => (
                     <FormItem>
-                      <FormLabel>Upload Logo Image <span className="text-primary">*</span></FormLabel>
+                      <FormLabel className="font-medium">Upload Logo Image <span className="text-primary">*</span></FormLabel>
                       <FormControl>
                         <div 
                           className="mt-1 flex justify-center px-4 py-3 border-2 border-dashed border-border rounded-xl cursor-pointer hover:border-primary/80 transition bg-input/50"
@@ -281,11 +281,11 @@ export default function Home() {
                   name="merchandise"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Merchandise Items (Comma Separated) <span className="text-primary">*</span></FormLabel>
+                      <FormLabel className="font-medium">Merchandise Items (Comma Separated) <span className="text-primary">*</span></FormLabel>
                       <FormControl>
                         <Input placeholder="e.g., paper bag, hat, mug" {...field} className="bg-input/50 border-border rounded-lg" />
                       </FormControl>
-                      <p className="mt-1 text-xs text-muted-foreground/70">List 3-5 items for best result</p>
+                      <p className="mt-1 text-xs text-muted-foreground/70 font-regular">List 3-5 items for best result</p>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -296,7 +296,7 @@ export default function Home() {
                   name="mainColor"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Main Color Theme <span className="text-primary">*</span></FormLabel>
+                      <FormLabel className="font-medium">Main Color Theme <span className="text-primary">*</span></FormLabel>
                       <FormControl>
                         <Input placeholder="e.g., Violet or #E2E2E2" {...field} className="bg-input/50 border-border rounded-lg"/>
                       </FormControl>
@@ -310,7 +310,7 @@ export default function Home() {
                   name="style"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Design Style <span className="text-primary">*</span></FormLabel>
+                      <FormLabel className="font-medium">Design Style <span className="text-primary">*</span></FormLabel>
                       <Select onValueChange={field.onChange} value={field.value}>
                           <FormControl>
                             <SelectTrigger className="bg-input/50 border-border rounded-lg">
@@ -355,7 +355,7 @@ export default function Home() {
                     </Alert>
                 )}
                 {!error && statusMessage && (
-                    <div className="px-4 py-3 rounded-lg text-sm bg-primary/20 text-primary-foreground">
+                    <div className="px-4 py-3 rounded-lg text-sm bg-primary/20 text-primary-foreground font-medium">
                         <p>{statusMessage}</p>
                     </div>
                 )}
@@ -366,10 +366,10 @@ export default function Home() {
                    <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-10">
                       <div className="text-center">
                           <Loader2 className="h-12 w-12 text-primary animate-spin mx-auto" />
-                          <p className="mt-4 text-primary font-medium text-lg">
+                          <p className="mt-4 text-primary font-semibold text-lg">
                               AI is crafting your brand identity...
                           </p>
-                          <p className="mt-1 text-sm text-muted-foreground">
+                          <p className="mt-1 text-sm text-muted-foreground font-regular">
                               This may take a moment.
                           </p>
                       </div>
@@ -457,3 +457,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
