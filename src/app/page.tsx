@@ -35,7 +35,7 @@ export default function Home() {
   const [isImproving, setIsImproving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [improvements, setImprovements] = useState<string | null>(null);
-  const [statusMessage, setStatusMessage] = useState('Upload your logo and define your brand identity inputs.');
+  const [statusMessage, setStatusMessage] = useState('Upload your logo and define the brand identity unputs.');
   const [logoPreviewUrl, setLogoPreviewUrl] = useState<string | null>(null);
   const [carouselApi, setCarouselApi] = useState<CarouselApi>();
 
@@ -123,9 +123,10 @@ export default function Home() {
       }
       
       if (result.imageUrl) {
-        setGeneratedImageUrls([result.imageUrl]);
-        setCurrentImageIndex(0);
+        setGeneratedImageUrls(prev => [...prev, result.imageUrl]);
+        setCurrentImageIndex(generatedImageUrls.length);
         setStatusMessage('Brand identity successfully generated! Review and download your high-resolution mockups.');
+        carouselApi?.scrollTo(generatedImageUrls.length);
       } else {
         throw new Error("The AI model did not return an image.");
       }
@@ -176,43 +177,41 @@ export default function Home() {
     if (currentImageUrl) {
       const link = document.createElement('a');
       link.href = currentImageUrl;
-      link.download = `${(form.getValues('brandName') || 'brand').toLowerCase().replace(/\s/g, '_')}_mockups_${Date.now()}.png`;
+      link.download = `${(form.getValues('brandName') || 'brand').toLowerCase().replace(/\s/g, '_')}_mockup.png`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
     }
   }, [generatedImageUrls, currentImageIndex, form]);
   
-  // const isLimitReached = usageCount >= MAX_GENERATIONS;
-  const isGenerateDisabled = isLoading || !logoFile; // || isLimitReached;
+  const isGenerateDisabled = isLoading || !logoFile; 
   const currentImageUrl = generatedImageUrls.length > 0 ? generatedImageUrls[currentImageIndex] : null;
 
   return (
     <div className="min-h-screen bg-background p-4 sm:p-8 font-body text-foreground">
       <header className="text-center mb-8">
-        <h1 className="text-4xl font-extrabold text-foreground flex items-center justify-center space-x-3">
-          <Zap className="h-8 w-8 text-primary" />
-          <span>Mocksy</span>
-        </h1>
-        <p className="mt-2 text-muted-foreground">
+        <div className="flex items-center justify-center space-x-2">
+            <Image src="/logo.png" alt="Mocksy Logo" width={48} height={22} />
+        </div>
+        <p className="mt-2 text-muted-foreground text-sm">
           AI-Powered Brand Identity Mockups Generator
         </p>
       </header>
 
-      <main className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-        <Card className="lg:col-span-1 h-fit">
+      <main className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
+        <Card className="lg:col-span-1 h-fit bg-card border-border rounded-2xl shadow-[0_0_20px_rgba(255,140,0,0.1)]">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="p-6 sm:p-8 space-y-6">
-              <h2 className="text-2xl font-bold text-card-foreground">1. Brand Definition</h2>
+              <h2 className="text-2xl font-bold text-card-foreground">Brand Definition</h2>
               
               <FormField
                 control={form.control}
                 name="brandName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Brand / Company Name</FormLabel>
+                    <FormLabel>Brand/Company Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., Hello AI" {...field} />
+                      <Input placeholder="e.g., Hello AI" {...field} className="bg-input border-border rounded-lg" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -224,23 +223,23 @@ export default function Home() {
                 name="logoFile"
                 render={({ field: { onChange } }) => (
                   <FormItem>
-                    <FormLabel>Upload Logo Image *</FormLabel>
+                    <FormLabel>Upload Logo Image <span className="text-primary">*</span></FormLabel>
                     <FormControl>
                       <div 
-                        className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed rounded-xl cursor-pointer hover:border-primary/80 transition"
+                        className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed border-border rounded-xl cursor-pointer hover:border-primary/80 transition bg-input"
                         onClick={() => fileInputRef.current?.click()}
                       >
                          <div className="space-y-1 text-center">
                             {logoPreviewUrl ? (
-                              <div className='relative w-40 h-40 mx-auto'>
+                              <div className='relative w-40 h-24 mx-auto'>
                                 <Image src={logoPreviewUrl} alt="Logo Preview" fill objectFit="contain" />
                               </div>
                             ) : (
                               <>
-                                <Upload className="mx-auto h-12 w-12 text-muted-foreground/50" />
+                                <Upload className="mx-auto h-10 w-10 text-muted-foreground/50" />
                                 <div className="flex text-sm text-muted-foreground">
                                     <span className="font-medium text-primary hover:text-primary/80">
-                                      Click to upload logo
+                                      Click/Drag to upload Logo
                                     </span>
                                 </div>
                                 <p className="text-xs text-muted-foreground/70">PNG/JPG up to 5MB</p>
@@ -271,55 +270,57 @@ export default function Home() {
                 name="merchandise"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Merchandise Items (Comma Separated) *</FormLabel>
+                    <FormLabel>Merchandise Items (Comma Separated) <span className="text-primary">*</span></FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., packaging bag, hat, lanyard" {...field} />
+                      <Input placeholder="e.g., paper bag, hat, mug" {...field} className="bg-input border-border rounded-lg" />
                     </FormControl>
-                    <p className="mt-1 text-xs text-muted-foreground/70">List 1-6 items for the best result.</p>
+                    <p className="mt-1 text-xs text-muted-foreground/70">List 3-5 items for best result</p>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+              
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="mainColor"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Main Color Theme <span className="text-primary">*</span></FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g., Violet or #E2E2E2" {...field} className="bg-input border-border rounded-lg"/>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <FormField
-                control={form.control}
-                name="mainColor"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Main Color Theme *</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., Violet or #8A2BE2" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="style"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Design Style *</FormLabel>
-                     <Select onValueChange={field.onChange} value={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a design style" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {STYLE_OPTIONS.map((opt) => (
-                            <SelectItem key={opt} value={opt}>{opt}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                <FormField
+                  control={form.control}
+                  name="style"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Design Style <span className="text-primary">*</span></FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                          <FormControl>
+                            <SelectTrigger className="bg-input border-border rounded-lg">
+                              <SelectValue placeholder="Select a Design style" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {STYLE_OPTIONS.map((opt) => (
+                              <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
               <div className='!mt-8 space-y-2'>
-                <Button type="submit" disabled={isGenerateDisabled} className="w-full text-lg py-6 transition-transform transform hover:scale-[1.02] active:scale-[0.98]">
+                <Button type="submit" disabled={isGenerateDisabled} className="w-full text-base font-semibold py-6 transition-transform transform hover:scale-[1.02] active:scale-[0.98] rounded-lg bg-primary text-primary-foreground">
                   {isLoading ? (
                     <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                   ) : (
@@ -327,21 +328,13 @@ export default function Home() {
                   )}
                   <span>{isLoading ? 'Generating...' : 'Generate Mockups'}</span>
                 </Button>
-                {/* <p className="text-center text-xs text-muted-foreground">
-                  {isLimitReached
-                    ? "You've reached your generation limit."
-                    : `You have ${MAX_GENERATIONS - usageCount} generations remaining.`}
-                </p> */}
               </div>
             </form>
           </Form>
         </Card>
 
-        <Card className="lg:col-span-2 p-6 sm:p-8 flex flex-col">
-           <div className="flex items-center space-x-2 mb-4">
-              <Zap className="h-6 w-6 text-primary" />
-              <h2 className="text-2xl font-bold text-card-foreground">2. Generated Mockup</h2>
-           </div>
+        <Card className="lg:col-span-1 p-6 sm:p-8 flex flex-col bg-card border-border rounded-2xl shadow-[0_0_20px_rgba(255,140,0,0.1)]">
+           <h2 className="text-2xl font-bold text-card-foreground mb-4">Generated Mockups</h2>
           
             <div className="min-h-12 mb-4">
                 {error && (
@@ -352,13 +345,13 @@ export default function Home() {
                     </Alert>
                 )}
                 {!error && statusMessage && (
-                    <div className={`px-4 py-3 rounded-lg text-sm ${isLoading ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300' : 'bg-primary/10 text-primary/80 dark:text-primary'}`}>
+                    <div className="px-4 py-3 rounded-lg text-sm bg-primary/10 text-primary">
                         <p>{statusMessage}</p>
                     </div>
                 )}
             </div>
 
-            <div className="relative border-4 border-dashed border-muted rounded-2xl overflow-hidden flex-grow min-h-[500px] flex items-center justify-center bg-background/50 p-4">
+            <div className="relative border-2 border-dashed border-border rounded-2xl overflow-hidden flex-grow min-h-[400px] flex items-center justify-center bg-input p-4">
               {isLoading && (
                    <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-10">
                       <div className="text-center">
@@ -372,33 +365,31 @@ export default function Home() {
                       </div>
                   </div>
               )}
-              {currentImageUrl && !isLoading && (
+              {currentImageUrl && !isLoading ? (
                   <img
                       src={currentImageUrl}
                       alt="Generated Brand Identity Mockup"
-                      className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
+                      className="max-w-full max-h-full object-contain rounded-lg"
                   />
-              )}
-              {!currentImageUrl && !isLoading && (
+              ) : !isLoading && (
                   <div className="text-center text-muted-foreground p-10">
-                      <Sparkles className="mx-auto h-16 w-16 text-primary/10 mb-4" />
+                      <Sparkles className="mx-auto h-16 w-16 text-muted-foreground/20 mb-4" />
                       <p className="text-lg font-semibold">
                           Your masterpiece will appear here.
                       </p>
-                       <p className="text-sm">Fill in the form and click &lsquo;Generate Mockups&rsquo;.</p>
                   </div>
               )}
             </div>
             
             {generatedImageUrls.length > 0 && !isLoading && (
               <div className="relative w-full p-4 mt-4">
-                 <Carousel setApi={setCarouselApi} className="w-full max-w-xs mx-auto">
-                    <CarouselContent>
+                 <Carousel setApi={setCarouselApi} opts={{align: "start"}} className="w-full">
+                    <CarouselContent className="-ml-2">
                       {generatedImageUrls.map((url, index) => (
-                        <CarouselItem key={index} className="basis-1/3">
+                        <CarouselItem key={index} className="basis-1/4 pl-2">
                           <div className="p-1">
                             <Card 
-                              className={`overflow-hidden cursor-pointer transition-all ${index === currentImageIndex ? 'border-primary border-2' : 'border-muted'}`}
+                              className={`overflow-hidden cursor-pointer transition-all bg-input aspect-square ${index === currentImageIndex ? 'border-primary border-2' : 'border-border'}`}
                               onClick={() => carouselApi?.scrollTo(index)}
                             >
                               <div className="relative aspect-square">
@@ -414,21 +405,21 @@ export default function Home() {
                         </CarouselItem>
                       ))}
                     </CarouselContent>
-                    <CarouselPrevious />
-                    <CarouselNext />
+                    <CarouselPrevious className="bg-card border-border hover:bg-input"/>
+                    <CarouselNext className="bg-card border-border hover:bg-input"/>
                   </Carousel>
               </div>
             )}
             
             {currentImageUrl && !isLoading && (
-                <div className="flex justify-center space-x-2 mt-4">
-                    <Button onClick={onImprove} disabled={isImproving} className="shadow-lg transition-transform transform hover:scale-105 active:scale-95">
-                        {isImproving ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <Wand2 className="mr-2 h-5 w-5" />}
+                <div className="flex justify-center space-x-4 mt-4">
+                    <Button onClick={onImprove} disabled={isImproving} className="shadow-lg transition-transform transform hover:scale-105 active:scale-95 bg-primary text-primary-foreground rounded-lg px-6 py-5 font-semibold">
+                        {isImproving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
                         <span>Improve</span>
                     </Button>
-                    <Button onClick={downloadImage} className="shadow-lg transition-transform transform hover:scale-105 active:scale-95">
-                        <Download className="mr-2 h-5 w-5" />
-                        <span>Download</span>
+                    <Button onClick={downloadImage} variant="outline" className="shadow-lg transition-transform transform hover:scale-105 active:scale-95 bg-card border-border hover:bg-input hover:text-foreground rounded-lg px-6 py-5 font-semibold">
+                        <Download className="mr-2 h-4 w-4" />
+                        <span>Download File</span>
                     </Button>
                 </div>
             )}
