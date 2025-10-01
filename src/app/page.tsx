@@ -16,11 +16,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertDialog, AlertDialogAction, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from "@/components/ui/carousel";
 import { Download, Upload, Zap, Sparkles, AlertCircle, Loader2, Wand2 } from 'lucide-react';
 import Image from 'next/image';
+import { Textarea } from '@/components/ui/textarea';
 
 
 const STYLE_OPTIONS = ['Modern', 'Minimalist', 'Vintage', 'Urban', 'Futuristic', 'Eco-Natural', 'Sporty', 'Luxury', 'Geometric'];
@@ -37,6 +38,8 @@ export default function Home() {
   const [logoPreviewUrl, setLogoPreviewUrl] = useState<string | null>(null);
   const [carouselApi, setCarouselApi] = useState<CarouselApi>();
   const [showLimitDialog, setShowLimitDialog] = useState(false);
+  const [showImproveDialog, setShowImproveDialog] = useState(false);
+  const [critique, setCritique] = useState('');
 
   
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -151,6 +154,14 @@ export default function Home() {
     }
   };
 
+  const handleImproveClick = () => {
+    if (generatedImageUrls.length > 0) {
+      setShowImproveDialog(true);
+    } else {
+      setError("Generate an image before you can improve it.");
+    }
+  };
+  
   const onImprove = async () => {
     if (generatedImageUrls.length >= MAX_GENERATIONS) {
       setShowLimitDialog(true);
@@ -165,6 +176,7 @@ export default function Home() {
     setIsImproving(true);
     setError(null);
     setStatusMessage('Applying AI suggestions to generate an improved mockup...');
+    setShowImproveDialog(false);
     
     try {
         const values = form.getValues();
@@ -179,7 +191,7 @@ export default function Home() {
             merchandise: values.merchandise,
             previousImageUrl: currentImageUrl,
             logoDataUri: logoDataUri,
-            critique: "Generate a new composition. Try a different camera angle, change the product placement, or alter the background studio setting. Be creative."
+            critique: critique || "Generate a new composition. Try a different camera angle, change the product placement, or alter the background studio setting. Be creative."
         }, userId);
 
         if (result.error) {
@@ -190,6 +202,7 @@ export default function Home() {
             const newImageIndex = generatedImageUrls.length;
             setGeneratedImageUrls(prev => [...prev, result.imageUrl]);
             setStatusMessage('Successfully generated an improved mockup!');
+            setCritique('');
             
             setTimeout(() => {
                 carouselApi?.scrollTo(newImageIndex);
@@ -235,8 +248,9 @@ export default function Home() {
             className="h-14 w-14 text-primary"
             fill="currentColor"
           >
-            <path d="M244 80h-40V64a16 16 0 0 0-16-16h-48a16 16 0 0 0-16 16v16H80a16 16 0 0 0-16 16v40H24a16 16 0 0 0-16 16v48a16 16 0 0 0 16 16h40v16a16 16 0 0 0 16 16h48a16 16 0 0 0 16-16v-16h40a16 16 0 0 0 16-16v-40h40a16 16 0 0 0 16-16v-48a16 16 0 0 0-16-16Zm-56-16h40l-40 40Zm-64 0h48v48h-48ZM80 96h40V80H80Zm0 48v-40h40v40Zm-16 64H24v-48h48v48Zm112 16h-48v-48h48Zm16-64h-40v-40h40Zm48 48h-48v-48h48v48Z" />
-            <path d="m221.16 53.16-28.28 28.28a12 12 0 0 1-17 0l-11.32-11.32a12 12 0 0 1 0-17l28.28-28.28a12 12 0 0 1 17 0l11.32 11.32a12 12 0 0 1 0 17Z" opacity="0.5" />
+            <path d="m221.16 53.16-28.28 28.28a12 12 0 0 1-17 0l-11.32-11.32a12 12 0 0 1 0-17l28.28-28.28a12 12 0 0 1 17 0l11.32 11.32a12 12 0 0 1 0 17Z" opacity="0.5"/>
+            <path d="M192.51,69.83a12,12,0,0,0-17,0L24,220.34A12,12,0,0,0,35.31,237.66L185.83,87.14a12,12,0,0,0,0-17ZM73.66,192,48,166.34,159.31,55,185,80.69Z"/>
+            <path d="M185.83,87.14,208,109.31l16.49-16.48a12,12,0,0,0,0-17Z"/>
           </svg>
             <span className="text-5xl font-semibold text-primary">Mocksy</span>
         </div>
@@ -413,12 +427,14 @@ export default function Home() {
                   </div>
               )}
               {currentImageUrl && !isLoading && !isImproving ? (
+                <div className="p-0 flex-grow relative w-full h-full">
                   <Image
                       src={currentImageUrl}
                       alt="Generated Brand Identity Mockup"
                       fill
                       className="object-contain rounded-lg"
                   />
+                </div>
               ) : !isLoading && !isImproving && (
                   <div className="text-center text-muted-foreground p-10">
                       <Sparkles className="mx-auto h-16 w-16 text-muted-foreground/20 mb-4" />
@@ -430,7 +446,7 @@ export default function Home() {
             </div>
             
             {generatedImageUrls.length > 0 && !isLoading && (
-              <div className="flex items-center justify-start space-x-4 mt-4">
+              <div className="flex items-center justify-between space-x-4 mt-4">
                   <div className="relative flex-grow max-w-lg">
                       <Carousel setApi={setCarouselApi} opts={{align: "start"}} className="w-full">
                           <CarouselContent className="-ml-2">
@@ -457,12 +473,16 @@ export default function Home() {
                       </Carousel>
                   </div>
                   
-                  <Button onClick={onImprove} disabled={isImproveDisabled} size="icon" className="shadow-lg transition-transform transform hover:scale-105 active:scale-95 rounded-full h-12 w-12 font-medium">
-                      {isImproving ? <Loader2 className="h-5 w-5 animate-spin" /> : <Wand2 className="h-5 w-5" />}
-                  </Button>
-                  <Button onClick={downloadImage} variant="outline" size="icon" className="shadow-lg transition-transform transform hover:scale-105 active:scale-95 bg-card/50 border-border hover:bg-input/50 hover:text-foreground rounded-full h-12 w-12 font-medium">
-                      <Download className="h-5 w-5" />
-                  </Button>
+                  <div className="flex items-center space-x-2">
+                    <Button onClick={handleImproveClick} disabled={isImproveDisabled} className="font-medium rounded-[6px]">
+                        {isImproving ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <Wand2 className="mr-2 h-5 w-5" />}
+                        Improve
+                    </Button>
+                    <Button onClick={downloadImage} variant="outline" className="font-medium rounded-[6px] bg-card/50 border-border hover:bg-input/50 hover:text-foreground">
+                        <Download className="mr-2 h-5 w-5" />
+                        Download
+                    </Button>
+                  </div>
               </div>
             )}
         </Card>
@@ -484,17 +504,34 @@ export default function Home() {
             </AlertDialogContent>
         </AlertDialog>
 
+        <AlertDialog open={showImproveDialog} onOpenChange={setShowImproveDialog}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Improve Your Mockup</AlertDialogTitle>
+              <AlertDialogDescription>
+                Tell the AI what you'd like to change. Be specific! For example, "Make the background darker," or "Use a different font for the text."
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <div className="grid gap-4 py-4">
+              <Textarea
+                id="critique"
+                placeholder="e.g., Change the mug to a t-shirt and make the style more minimalist."
+                value={critique}
+                onChange={(e) => setCritique(e.target.value)}
+                className="w-full"
+              />
+            </div>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={() => setCritique('')}>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={onImprove}>
+                {isImproving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                Regenerate
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
-
-
-
-    
-
-    
-
-
-
 
     
