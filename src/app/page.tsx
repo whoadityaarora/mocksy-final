@@ -250,22 +250,11 @@ export default function Home() {
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="h-14 w-14 text-primary"
+          className="h-12 w-12 text-primary"
         >
-          <path
-            d="M22 2.5 12 8l-10-5.5L12 2l10 .5z"
-            stroke="currentColor"
-            fill="currentColor"
-            transform="translate(0, -0.5)"
-          />
-          <path
-            d="M17.5 9.5 22 12l-10 5-10-5 4.5-2.5"
-            fill="currentColor"
-            stroke="none"
-          />
-          <path d="M2 12l10 5 10-5" />
+          <path d="M3 3h18v18H3z" fill="hsl(var(--primary))" stroke="none" />
+          <path d="M9 9v6l3-3 3 3V9" stroke="hsl(var(--primary-foreground))" strokeWidth="2.5" />
         </svg>
-
             <span className="text-5xl font-semibold text-primary">Mocksy</span>
         </div>
         <p className="mt-2 text-muted-foreground text-lg font-regular">
@@ -551,9 +540,3 @@ export default function Home() {
     </div>
   );
 }
-
-    
-
-    
-
-    
