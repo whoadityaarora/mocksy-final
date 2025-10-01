@@ -124,9 +124,9 @@ export default function Home() {
       
       if (result.imageUrl) {
         setGeneratedImageUrls(prev => [...prev, result.imageUrl]);
-        setCurrentImageIndex(generatedImageUrls.length);
+        setCurrentImageIndex(0); // Start with the first image
         setStatusMessage('Brand identity successfully generated! Review and download your high-resolution mockups.');
-        carouselApi?.scrollTo(generatedImageUrls.length);
+        carouselApi?.scrollTo(0);
       } else {
         throw new Error("The AI model did not return an image.");
       }
@@ -191,7 +191,8 @@ export default function Home() {
     <div className="min-h-screen bg-background p-4 sm:p-8 font-body text-foreground">
       <header className="text-center mb-8">
         <div className="flex items-center justify-center space-x-2">
-            <Image src="/logo.png" alt="Mocksy Logo" width={48} height={22} />
+            <Image src="/logo.png" alt="Mocksy Logo" width={48} height={48} />
+            <span className="text-4xl font-bold">Mocksy</span>
         </div>
         <p className="mt-2 text-muted-foreground text-sm">
           AI-Powered Brand Identity Mockups Generator
@@ -381,7 +382,7 @@ export default function Home() {
               )}
             </div>
             
-            {generatedImageUrls.length > 0 && !isLoading && (
+            {generatedImageUrls.length > 1 && !isLoading && (
               <div className="relative w-full p-4 mt-4">
                  <Carousel setApi={setCarouselApi} opts={{align: "start"}} className="w-full">
                     <CarouselContent className="-ml-2">
