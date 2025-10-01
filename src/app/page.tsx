@@ -18,7 +18,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertDialog, AlertDialogAction, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext, type CarouselApi } from "@/components/ui/carousel";
+import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
 import { Download, Upload, Zap, Sparkles, AlertCircle, Loader2, Wand2 } from 'lucide-react';
 import Image from 'next/image';
 
@@ -227,12 +227,12 @@ export default function Home() {
   return (
     <div className="relative h-screen flex flex-col px-8 pb-4 sm:px-6 sm:pb-6 md:px-8 md:pb-8 font-body text-foreground">
 
-      <header className="text-center py-4">
+      <header className="text-center py-2">
         <div className="flex items-center justify-center space-x-3">
-          <svg
+        <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 256 256"
-            className="h-12 w-12 text-primary"
+            className="h-14 w-14 text-primary"
             fill="currentColor"
           >
             <path d="M244 80h-40V64a16 16 0 0 0-16-16h-48a16 16 0 0 0-16 16v16H80a16 16 0 0 0-16 16v40H24a16 16 0 0 0-16 16v48a16 16 0 0 0 16 16h40v16a16 16 0 0 0 16 16h48a16 16 0 0 0 16-16v-16h40a16 16 0 0 0 16-16v-40h40a16 16 0 0 0 16-16v-48a16 16 0 0 0-16-16Zm-56-16h40l-40 40Zm-64 0h48v48h-48ZM80 96h40V80H80Zm0 48v-40h40v40Zm-16 64H24v-48h48v48Zm112 16h-48v-48h48Zm16-64h-40v-40h40Zm48 48h-48v-48h48v48Z" />
@@ -430,7 +430,7 @@ export default function Home() {
             </div>
             
             {generatedImageUrls.length > 0 && !isLoading && (
-              <div className="flex items-center justify-center space-x-4 mt-4">
+              <div className="flex items-center justify-start space-x-4 mt-4">
                   <div className="relative flex-grow max-w-lg">
                       <Carousel setApi={setCarouselApi} opts={{align: "start"}} className="w-full">
                           <CarouselContent className="-ml-2">
@@ -438,7 +438,7 @@ export default function Home() {
                               <CarouselItem key={index} className="basis-1/4 md:basis-1/5 pl-2">
                               <div className="p-1">
                                   <Card 
-                                  className={`overflow-hidden cursor-pointer transition-all bg-input/50 aspect-square rounded-md ${index === currentImageIndex ? 'border-primary border-2' : 'border-border'}`}
+                                  className={`overflow-hidden cursor-pointer transition-all bg-input/50 aspect-square rounded-[6px] ${index === currentImageIndex ? 'border-primary border-2' : 'border-border'}`}
                                   onClick={() => handleThumbnailClick(index)}
                                   >
                                   <div className="relative aspect-square">
@@ -454,8 +454,6 @@ export default function Home() {
                               </CarouselItem>
                           ))}
                           </CarouselContent>
-                          <CarouselPrevious className="left-2" />
-                          <CarouselNext className="right-2" />
                       </Carousel>
                   </div>
                   
@@ -497,3 +495,6 @@ export default function Home() {
     
 
 
+
+
+    
