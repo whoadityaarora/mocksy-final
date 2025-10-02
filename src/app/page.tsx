@@ -446,7 +446,7 @@ export default function Home() {
                       src={currentImageUrl}
                       alt="Generated Brand Identity Mockup"
                       fill
-                      className="object-contain rounded-lg"
+                      className="object-cover rounded-lg"
                   />
                 </div>
               ) : !isLoading && !isImproving && (
