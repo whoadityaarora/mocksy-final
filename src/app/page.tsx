@@ -450,8 +450,11 @@ export default function Home() {
                       src={currentImageUrl}
                       alt="Generated Brand Identity Mockup"
                       fill
-                      className="object-contain rounded-lg"
+                      className="object-cover rounded-lg"
                   />
+                  <div className="absolute bottom-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded-md">
+                    Download to view in full resolution
+                  </div>
                 </div>
               ) : !isLoading && !isImproving && (
                   <div className="text-center text-muted-foreground p-10">
@@ -595,5 +598,7 @@ export default function Home() {
     </div>
   );
 }
+
+    
 
     
