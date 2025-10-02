@@ -450,7 +450,7 @@ export default function Home() {
                       src={currentImageUrl}
                       alt="Generated Brand Identity Mockup"
                       fill
-                      className="object-cover rounded-lg"
+                      className="object-contain rounded-lg"
                   />
                 </div>
               ) : !isLoading && !isImproving && (
@@ -480,7 +480,7 @@ export default function Home() {
                                       src={url}
                                       alt={`Generated Mockup ${index + 1}`}
                                       fill
-                                      className="object-cover"
+                                      className="object-contain"
                                       />
                                   </div>
                                   </Card>
