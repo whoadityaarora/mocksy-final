@@ -76,6 +76,7 @@ const regenerateBrandIdentityFromCritiqueFlow = ai.defineFlow(
     - The products displayed should be: ${input.merchandise}.
     - The main visual color and color palette should be dominated by: ${input.mainColor}.
     - The overall design and presentation must be in a ${input.style} style.
+    - The final image must have a 4:3 aspect ratio.
     - ${gridInstruction}
     - Maintain a clean, professional, studio-quality aesthetic throughout.
 

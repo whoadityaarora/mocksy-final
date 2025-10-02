@@ -69,6 +69,7 @@ Instructions:
 - The products displayed should be: ${input.merchandise}.
 - The main visual color and color palette should be dominated by: ${input.mainColor}.
 - The overall design and presentation must be in a ${input.style} style. Ensure the logo is perfectly rendered on all items with excellent lighting and resolution.
+- The final image must have a 4:3 aspect ratio.
 - ${gridInstruction}
 - Maintain a clean, studio-quality aesthetic throughout.
 
