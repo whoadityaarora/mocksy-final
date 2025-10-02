@@ -262,12 +262,9 @@ export default function Home() {
             strokeLinejoin="round"
             className="h-12 w-12 text-primary"
           >
-            <path d="M12 2L2 7l10 5 10-5-10-5z" fill="hsl(var(--primary))" stroke="none" />
-            <path d="M2 17l10 5 10-5" stroke="hsl(var(--primary-foreground))" strokeWidth="1.5" />
-            <path d="M2 12l10 5 10-5" stroke="hsl(var(--primary-foreground))" strokeWidth="1.5" />
-             <path d="M12 22V12" stroke="hsl(var(--primary-foreground))" strokeWidth="1.5" />
-             <path d="M22 7v10" stroke="hsl(var(--primary))" strokeWidth="1.5" />
-             <path d="M2 7v10" stroke="hsl(var(--primary))" strokeWidth="1.5" />
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+            <line x1="12" y1="22.08" x2="12" y2="12" />
           </svg>
           <span className="text-5xl font-semibold text-primary">Mocksy</span>
         </div>
