@@ -58,7 +58,7 @@ const regenerateBrandIdentityFromCritiqueFlow = ai.defineFlow(
           gridInstruction = 'The final image should feature the single merchandise item prominently in a professional studio setting. Do not use any grid lines.';
         }
     
-        const promptText = `You are an AI-powered brand identity generator. Your task is to REVISE a brand mockup based on a previous version and a set of critiques. Your goal is to create a NEW and IMPROVED image, not just a higher-quality version of the old one.
+        const promptText = `You are an AI-powered brand identity generator. Your task is to REVISE a brand mockup based on a previous version and a set of critiques. Your goal is to create a NEW and IMPROVED image that is hyper-realistic, with exceptionally high quality and sharp details.
 
     **Original Brand Details:**
     - Brand Name: ${input.brandName}

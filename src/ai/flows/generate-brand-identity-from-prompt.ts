@@ -55,7 +55,7 @@ const generateBrandIdentityFromPromptFlow = ai.defineFlow(
     }
 
 
-    const promptText = `You are an AI-powered brand identity generator. Your task is to create a single, high-quality, professional studio mockup image that visually represents a brand identity based on the user's logo and brand details.
+    const promptText = `You are an AI-powered brand identity generator. Your task is to create a single, hyper-realistic, professional studio mockup image with exceptionally high quality and sharp details, that visually represents a brand identity based on the user's logo and brand details.
 
 Brand Details:
 - Brand Name: ${input.brandName}
