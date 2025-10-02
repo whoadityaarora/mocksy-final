@@ -40,8 +40,10 @@ const generateBrandIdentityFromPromptFlow = ai.defineFlow(
     let gridInstruction = '';
     if (itemCount > 1) {
       let arrangement = '';
-      if (itemCount <= 3) {
-        arrangement = `in a single row`;
+      if (itemCount === 2) {
+        arrangement = 'in a 1x2 grid (one row, two columns)';
+      } else if (itemCount === 3) {
+        arrangement = `in a 1x3 grid (one row, three columns)`;
       } else if (itemCount === 4) {
         arrangement = `in a 2x2 grid`;
       } else { // 5 or 6 items
