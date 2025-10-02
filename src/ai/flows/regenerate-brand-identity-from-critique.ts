@@ -72,7 +72,7 @@ const regenerateBrandIdentityFromCritiqueFlow = ai.defineFlow(
     **Instructions for Revision:**
     - You MUST address the points in the critique to create a new, improved image.
     - **Generate a new composition.** Try a different camera angle, change the product placement, or alter the background studio setting. Be creative.
-    - Ensure the provided logo is prominently and clearly displayed on all merchandise items with perfect rendering, lighting, and resolution.
+    - Ensure the provided logo is prominently and clearly displayed on all merchandise items with perfect rendering, lighting, and resolution. **Crucially, do not add any text to the image yourself.** Only the visual logo from the uploaded image should appear on the merchandise.
     - The products displayed should be: ${input.merchandise}.
     - The main visual color and color palette should be dominated by: ${input.mainColor}.
     - The overall design and presentation must be in a ${input.style} style.

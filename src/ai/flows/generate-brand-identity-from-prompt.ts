@@ -65,7 +65,7 @@ Brand Details:
 
 Instructions:
 - Create a cohesive set of visual designs for the brand, ensuring that all elements align with the provided brand details.
-- The provided logo must be prominently and clearly displayed on all merchandise items.
+- The provided logo must be prominently and clearly displayed on all merchandise items. **Crucially, do not add any text to the image yourself.** Only the visual logo from the uploaded image should appear on the merchandise.
 - The products displayed should be: ${input.merchandise}.
 - The main visual color and color palette should be dominated by: ${input.mainColor}.
 - The overall design and presentation must be in a ${input.style} style. Ensure the logo is perfectly rendered on all items with excellent lighting and resolution.
