@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useEffect } from 'react';
@@ -23,7 +24,7 @@ const UnicornStudioBackground: React.FC = () => {
       style={{ pointerEvents: 'none' }}
     >
       <div 
-        data-us-project="x1JejqW4wgfC9BDcbCGt" 
+        data-us-project="WPqsXkz97ZxEUGZocs39" 
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
         style={{ width: '1440px', height: '900px' }}
       ></div>
