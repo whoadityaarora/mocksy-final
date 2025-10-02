@@ -509,7 +509,7 @@ export default function Home() {
         </Card>
       </main>
 
-        <footer className="text-center text-xs text-muted-foreground py-2">
+        <footer className="text-left text-xs text-muted-foreground py-2">
           <p>
             Created by{' '}
             <a
