@@ -248,7 +248,7 @@ export default function Home() {
   const currentImageUrl = generatedImageUrls.length > 0 ? generatedImageUrls[currentImageIndex] : null;
 
   return (
-    <div className="relative min-h-screen h-screen overflow-hidden flex flex-col px-4 sm:px-6 md:px-8 font-body text-foreground">
+    <div className="relative min-h-screen flex flex-col px-4 sm:px-6 md:px-8 font-body text-foreground">
 
       <header className="text-center py-2">
         <div className="flex items-center justify-center space-x-3">
@@ -262,8 +262,12 @@ export default function Home() {
             strokeLinejoin="round"
             className="h-12 w-12 text-primary"
           >
-            <path d="M3 3h18v18H3z" fill="hsl(var(--primary))" stroke="none" />
-            <path d="M9 9v6l3-3 3 3V9" stroke="hsl(var(--primary-foreground))" strokeWidth="2.5" />
+            <path d="M12 2L2 7l10 5 10-5-10-5z" fill="hsl(var(--primary))" stroke="none" />
+            <path d="M2 17l10 5 10-5" stroke="hsl(var(--primary-foreground))" strokeWidth="1.5" />
+            <path d="M2 12l10 5 10-5" stroke="hsl(var(--primary-foreground))" strokeWidth="1.5" />
+             <path d="M12 22V12" stroke="hsl(var(--primary-foreground))" strokeWidth="1.5" />
+             <path d="M22 7v10" stroke="hsl(var(--primary))" strokeWidth="1.5" />
+             <path d="M2 7v10" stroke="hsl(var(--primary))" strokeWidth="1.5" />
           </svg>
           <span className="text-5xl font-semibold text-primary">Mocksy</span>
         </div>
@@ -446,7 +450,7 @@ export default function Home() {
                       src={currentImageUrl}
                       alt="Generated Brand Identity Mockup"
                       fill
-                      className="object-cover rounded-lg"
+                      className="object-contain rounded-lg"
                   />
                 </div>
               ) : !isLoading && !isImproving && (
@@ -591,3 +595,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
