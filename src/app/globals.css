@@ -88,4 +88,9 @@
   .glass-card {
     @apply bg-card/60 backdrop-blur-xl border border-white/10 shadow-lg;
   }
+
+  /* Hide Unicorn Studio watermark */
+  a[href="https://unicorn.studio?ref=embed"] {
+    display: none !important;
+  }
 }
