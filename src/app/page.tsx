@@ -271,7 +271,7 @@ export default function Home() {
           </svg>
           <span className="text-5xl font-semibold text-primary">Mocksy</span>
         </div>
-        <p className="mt-1 text-muted-foreground text-base font-regular">
+        <p className="mt-1 text-foreground text-base font-regular">
           AI-Powered Brand Identity Mockups Generator
         </p>
       </header>
