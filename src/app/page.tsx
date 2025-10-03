@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import type { z } from 'zod';
 import { signInAnonymously, type AuthError } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 import { generateIdentityAction, regenerateIdentityAction } from '@/app/actions';
 import { brandFormSchema } from '@/lib/schema';
@@ -19,7 +20,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
-import { Download, Upload, Zap, Sparkles, AlertCircle, Loader2, Wand2, PartyPopper } from 'lucide-react';
+import { Download, Upload, Zap, Sparkles, AlertCircle, Loader2, Wand2, PartyPopper, Smartphone, Monitor } from 'lucide-react';
 import Image from 'next/image';
 import { Textarea } from '@/components/ui/textarea';
 
@@ -45,8 +46,10 @@ export default function Home() {
   const [showWelcomeDialog, setShowWelcomeDialog] = useState(false);
   const [initialGenerationsCount, setInitialGenerationsCount] = useState(0);
   const [improvementGenerationsCount, setImprovementGenerationsCount] = useState(0);
+  const [showDesktopModeAlert, setShowDesktopModeAlert] = useState(false);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const isMobile = useIsMobile();
 
   const form = useForm<z.infer<typeof brandFormSchema>>({
     resolver: zodResolver(brandFormSchema),
@@ -60,6 +63,12 @@ export default function Home() {
   });
 
   const logoFile = form.watch('logoFile');
+  
+  useEffect(() => {
+    if (isMobile) {
+      setShowDesktopModeAlert(true);
+    }
+  }, [isMobile]);
 
   useEffect(() => {
     if (logoFile) {
@@ -592,10 +601,36 @@ export default function Home() {
             </AlertDialogFooter>
           </AlertDialogContent>
       </AlertDialog>
+
+      <AlertDialog open={showDesktopModeAlert} onOpenChange={setShowDesktopModeAlert}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-3">
+              <Smartphone className="w-6 h-6 text-primary" />
+              Mobile View Detected
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              For the best experience, we recommend using a desktop browser. Some features may not be fully optimized for mobile.
+              <div className="flex items-center justify-center gap-4 mt-4 text-sm text-muted-foreground">
+                  <div className="flex items-center gap-2">
+                      <Smartphone className="w-4 h-4" />
+                      <span>Mobile</span>
+                  </div>
+                  <div className="text-lg font-bold">&rarr;</div>
+                  <div className="flex items-center gap-2">
+                      <Monitor className="w-4 h-4" />
+                      <span>Desktop</span>
+                  </div>
+              </div>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={() => setShowDesktopModeAlert(false)}>
+              Understood
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
-
-    
-
-    
