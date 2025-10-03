@@ -20,13 +20,13 @@ const UnicornStudioBackground: React.FC = () => {
 
   return (
     <div 
-      className="fixed inset-0 w-full h-full z-0"
+      className="fixed inset-0 w-full h-full z-0 overflow-hidden"
       style={{ pointerEvents: 'none' }}
     >
       <div 
         data-us-project="WPqsXkz97ZxEUGZocs39" 
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-        style={{ width: '1440px', height: '900px' }}
+        className="absolute top-1/2 left-1/2"
+        style={{ width: '100vw', height: '100vh', transform: 'translate(-50%, -50%) scale(1.4)' }}
       ></div>
     </div>
   );
