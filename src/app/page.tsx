@@ -609,18 +609,20 @@ export default function Home() {
               <Smartphone className="w-6 h-6 text-primary" />
               Mobile View Detected
             </AlertDialogTitle>
-            <AlertDialogDescription>
-              For the best experience, we recommend using a desktop browser. Some features may not be fully optimized for mobile.
-              <div className="flex items-center justify-center gap-4 mt-4 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-2">
-                      <Smartphone className="w-4 h-4" />
-                      <span>Mobile</span>
-                  </div>
-                  <div className="text-lg font-bold">&rarr;</div>
-                  <div className="flex items-center gap-2">
-                      <Monitor className="w-4 h-4" />
-                      <span>Desktop</span>
-                  </div>
+            <AlertDialogDescription asChild>
+              <div>
+                For the best experience, we recommend using a desktop browser. Some features may not be fully optimized for mobile.
+                <div className="flex items-center justify-center gap-4 mt-4 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-2">
+                        <Smartphone className="w-4 h-4" />
+                        <span>Mobile</span>
+                    </div>
+                    <div className="text-lg font-bold">&rarr;</div>
+                    <div className="flex items-center gap-2">
+                        <Monitor className="w-4 h-4" />
+                        <span>Desktop</span>
+                    </div>
+                </div>
               </div>
             </AlertDialogDescription>
           </AlertDialogHeader>
@@ -634,3 +636,7 @@ export default function Home() {
     </div>
   );
 }
+
+    
+
+    
