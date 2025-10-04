@@ -2,21 +2,32 @@
 'use client';
 
 import React, { useEffect } from 'react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const UnicornStudioBackground: React.FC = () => {
+  const isMobile = useIsMobile();
+
   useEffect(() => {
+    // Don't initialize if on mobile
+    if (isMobile) return;
+
     if (!window.UnicornStudio?.isInitialized) {
       const script = document.createElement('script');
       script.src = 'https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.4.31/dist/unicornStudio.umd.js';
       script.onload = () => {
-        if (!window.UnicornStudio.isInitialized) {
+        if (!window.UnicornStudio?.isInitialized) {
           window.UnicornStudio.init();
           window.UnicornStudio.isInitialized = true;
         }
       };
       (document.head || document.body).appendChild(script);
     }
-  }, []);
+  }, [isMobile]);
+
+  // Don't render anything on mobile
+  if (isMobile) {
+    return null;
+  }
 
   return (
     <div 
