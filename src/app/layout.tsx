@@ -2,6 +2,7 @@ import type {Metadata} from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 import VantaBackground from '@/components/VantaBackground';
+import { Analytics } from '@vercel/analytics/react';
 
 export const metadata: Metadata = {
   title: 'Mocksy',
@@ -28,6 +29,7 @@ export default function RootLayout({
           {children}
         </div>
         <Toaster />
+        <Analytics />
       </body>
     </html>
   );
